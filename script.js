@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     updateCartIcon();
+    updateCartButtons();
     console.log('Cart initialized with', cart.length, 'items');
 });
 
@@ -129,7 +130,8 @@ function addToCart(name, price, icon) {
             cart.push({ name, price, icon });
             saveCart();
             updateCartIcon();
-            showAddFeedback();
+            updateCartButtons();
+            showAddedPopup(name);
             console.log('Item added successfully. Cart:', cart);
         } else {
             console.log('Item already in cart:', name);
@@ -143,6 +145,7 @@ function removeFromCart(index) {
     cart.splice(index, 1);
     saveCart();
     updateCartIcon();
+    updateCartButtons();
     updateCartDisplay();
 }
 
@@ -220,18 +223,51 @@ function toggleCart() {
     }
 }
 
-function showAddFeedback() {
-    const cartIcon = document.getElementById('cartIcon');
+function updateCartButtons() {
+    const cartButtons = document.querySelectorAll('.cart-btn');
     
-    if (!cartIcon) {
-        console.error('Cart icon element not found');
-        return;
-    }
+    cartButtons.forEach(button => {
+        const productName = button.getAttribute('onclick').match(/'([^']+)'/)[1];
+        const isInCart = cart.find(item => item.name === productName);
+        
+        if (isInCart) {
+            button.textContent = 'Product Added';
+            button.style.background = '#00ff88';
+            button.style.color = '#000';
+            button.style.border = '2px solid #00ff88';
+            button.disabled = true;
+        } else {
+            button.textContent = 'Add to Cart';
+            button.style.background = 'transparent';
+            button.style.color = '#00ffff';
+            button.style.border = '2px solid #00ffff';
+            button.disabled = false;
+        }
+    });
+}
+
+function showAddedPopup(productName) {
+    const popup = document.createElement('div');
+    popup.className = 'added-popup';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <div class="popup-icon">✅</div>
+            <div class="popup-text">${productName} added to cart!</div>
+        </div>
+    `;
     
-    cartIcon.style.transform = 'translateY(-50%) scale(1.2)';
+    document.body.appendChild(popup);
+    
     setTimeout(() => {
-        cartIcon.style.transform = 'translateY(-50%) scale(1)';
-    }, 200);
+        popup.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+        popup.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(popup);
+        }, 300);
+    }, 2000);
 }
 
 // Test function - call this in console to test
@@ -241,4 +277,3 @@ function testCart() {
     console.log('Cart badge element:', document.getElementById('cartBadge'));
     console.log('Current cart:', cart);
     addToCart('Test Product', 99, '🧪');
-}

@@ -671,6 +671,42 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
+        .added-popup {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(145deg, #111, #1a1a1a);
+            border: 2px solid #00ff88;
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,255,136,0.4);
+            z-index: 1001;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .added-popup.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .popup-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .popup-icon {
+            font-size: 1.5rem;
+        }
+
+        .popup-text {
+            color: #00ff88;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
         @media (max-width: 768px) {
             .hero {
                 padding: 3rem 5%;
@@ -784,10 +820,9 @@
         }
 
         .cart-icon {
-            position: absolute;
-            top: 50%;
-            right: 5%;
-            transform: translateY(-50%);
+            position: fixed;
+            top: 20px;
+            right: 20px;
             background: linear-gradient(45deg, #ff00ff, #00ffff);
             color: #000;
             width: 55px;
@@ -800,10 +835,11 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 1.3rem;
             box-shadow: 0 4px 15px rgba(255,0,255,0.3);
+            z-index: 999;
         }
 
         .cart-icon:hover {
-            transform: translateY(-50%) scale(1.1);
+            transform: scale(1.1);
             box-shadow: 0 8px 25px rgba(255,0,255,0.6);
         }
 
@@ -840,10 +876,20 @@
             overflow: hidden;
         }
 
-        .cart-btn:hover {
+        .cart-btn:hover:not(:disabled) {
             background: #00ffff;
             color: #000;
             box-shadow: 0 0 20px rgba(0,255,255,0.4);
+        }
+
+        .cart-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .cart-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
         }
 
         .carousel-content .buy-btn:not(.cart-btn) {
@@ -1115,7 +1161,8 @@
                 width: 45px;
                 height: 45px;
                 font-size: 1.1rem;
-                right: 3%;
+                right: 15px;
+                top: 15px;
             }
 
             .cart-badge {
