@@ -434,8 +434,23 @@
             const urlParams = new URLSearchParams(window.location.search);
             const name = urlParams.get('product');
             const price = urlParams.get('price');
+            const cartItems = urlParams.get('cartItems');
+            const total = urlParams.get('total');
             
-            if (name && price) {
+            // Handle cart checkout
+            if (cartItems && total) {
+                const items = decodeURIComponent(cartItems).split('|');
+                const itemNames = items.map(item => item.split(':')[0]).join(', ');
+                
+                productName = itemNames.length > 50 ? 'Multiple Products' : itemNames;
+                productPrice = parseInt(total);
+                
+                // Update UI
+                document.getElementById('productName').textContent = productName;
+                document.getElementById('productPrice').textContent = '₹' + productPrice;
+            }
+            // Handle single product
+            else if (name && price) {
                 productName = decodeURIComponent(name);
                 productPrice = parseInt(price);
                 

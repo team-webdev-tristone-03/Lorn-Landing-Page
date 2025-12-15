@@ -59,6 +59,20 @@ function initiatePayment(productName, price) {
 
 initCarousel();
 
+// Force cart icon to be visible
+document.addEventListener('DOMContentLoaded', function() {
+    const cartIcon = document.getElementById('cartIcon');
+    const cartBadge = document.getElementById('cartBadge');
+    
+    if (cartIcon) {
+        cartIcon.style.display = 'flex';
+        console.log('Cart icon forced visible');
+    }
+    
+    updateCartIcon();
+    console.log('Cart initialized with', cart.length, 'items');
+});
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -99,4 +113,132 @@ function toggleProductsSlider() {
 }
 function initiatePayment(productName, price) {
     window.location.href = `pay.html?product=${encodeURIComponent(productName)}&price=${price}`;
+}
+
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function addToCart(name, price, icon) {
+    console.log('Adding to cart:', name, price, icon);
+    
+    try {
+        if (!cart.find(item => item.name === name)) {
+            cart.push({ name, price, icon });
+            saveCart();
+            updateCartIcon();
+            showAddFeedback();
+            console.log('Item added successfully. Cart:', cart);
+        } else {
+            console.log('Item already in cart:', name);
+        }
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+    }
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    saveCart();
+    updateCartIcon();
+    updateCartDisplay();
+}
+
+function updateCartIcon() {
+    const cartBadge = document.getElementById('cartBadge');
+    
+    if (!cartBadge) {
+        console.error('Cart badge element not found');
+        return;
+    }
+    
+    if (cart.length > 0) {
+        cartBadge.textContent = cart.length;
+        cartBadge.style.display = 'flex';
+        console.log('Cart badge updated:', cart.length);
+    } else {
+        cartBadge.style.display = 'none';
+        console.log('Cart badge hidden');
+    }
+}
+
+function updateCartDisplay() {
+    const cartItems = document.getElementById('cartItems');
+    const cartFooter = document.getElementById('cartFooter');
+    const cartTotal = document.getElementById('cartTotal');
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+        cartFooter.style.display = 'none';
+        return;
+    }
+    
+    cartItems.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+            <div class="cart-item-info">
+                <div class="cart-item-icon">${item.icon}</div>
+                <div class="cart-item-details">
+                    <h4>${item.name}</h4>
+                    <div class="cart-item-price">₹${item.price}</div>
+                </div>
+            </div>
+            <button class="delete-btn" onclick="removeFromCart(${index})">Remove</button>
+        </div>
+    `).join('');
+    
+    // Calculate and display total
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    cartTotal.textContent = `₹${total}`;
+    cartFooter.style.display = 'flex';
+}
+
+function proceedToCheckout() {
+    if (cart.length === 0) return;
+    
+    const cartData = cart.map(item => `${item.name}:${item.price}`).join('|');
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    
+    window.location.href = `pay.html?cartItems=${encodeURIComponent(cartData)}&total=${total}`;
+}
+
+function toggleCart() {
+    const modal = document.getElementById('cartModal');
+    
+    if (modal.classList.contains('show')) {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 400);
+    } else {
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('show');
+            updateCartDisplay();
+        }, 10);
+    }
+}
+
+function showAddFeedback() {
+    const cartIcon = document.getElementById('cartIcon');
+    
+    if (!cartIcon) {
+        console.error('Cart icon element not found');
+        return;
+    }
+    
+    cartIcon.style.transform = 'translateY(-50%) scale(1.2)';
+    setTimeout(() => {
+        cartIcon.style.transform = 'translateY(-50%) scale(1)';
+    }, 200);
+}
+
+// Test function - call this in console to test
+function testCart() {
+    console.log('Testing cart functionality...');
+    console.log('Cart icon element:', document.getElementById('cartIcon'));
+    console.log('Cart badge element:', document.getElementById('cartBadge'));
+    console.log('Current cart:', cart);
+    addToCart('Test Product', 99, '🧪');
 }

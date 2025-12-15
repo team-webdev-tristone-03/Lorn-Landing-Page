@@ -38,6 +38,10 @@
     <!-- Logo -->
     <div class="logo">
         <img src="image/lorn.png" alt="LORN VINGEST Logo">
+        <div class="cart-icon" id="cartIcon" onclick="toggleCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+        </div>
     </div>
 
     <section class="hero">
@@ -149,6 +153,9 @@
                             <button class="buy-btn" onclick="initiatePayment('All India Leads', 99)">
                                 Get Now <i class="fas fa-arrow-right"></i>
                             </button>
+                            <button class="buy-btn cart-btn" onclick="addToCart('All India Leads', 99, '📱')">
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
 
@@ -160,6 +167,9 @@
                             <div class="carousel-price" >₹49</div>
                             <button class="buy-btn" onclick="initiatePayment('Salaried Employee Verified Leads', 49)">
                                 Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button class="buy-btn cart-btn" onclick="addToCart('Salaried Employee Verified Leads', 49, '💼')">
+                                Add to Cart
                             </button>
                         </div>
                     </div>
@@ -173,6 +183,9 @@
                             <button class="buy-btn" onclick="initiatePayment('Verified Employees Leads', 49)">
                                 Get Now <i class="fas fa-arrow-right"></i>
                             </button>
+                            <button class="buy-btn cart-btn" onclick="addToCart('Verified Employees Leads', 49, '✅')">
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
 
@@ -184,6 +197,9 @@
                             <div class="carousel-price" >₹99</div>
                             <button class="buy-btn" onclick="initiatePayment('Pan India Database', 99)">
                                 Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button class="buy-btn cart-btn" onclick="addToCart('Pan India Database', 99, '🗺️')">
+                                Add to Cart
                             </button>
                         </div>
                     </div>
@@ -197,6 +213,9 @@
                             <button class="buy-btn" onclick="initiatePayment('1 Crore+ Bulk Leads', 99)">
                                 Get Now <i class="fas fa-arrow-right"></i>
                             </button>
+                            <button class="buy-btn cart-btn" onclick="addToCart('1 Crore+ Bulk Leads', 99, '📊')">
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
 
@@ -208,6 +227,9 @@
                             <div class="carousel-price" >₹99</div>
                             <button class="buy-btn" onclick="initiatePayment('10,000+ Reels & Ads for Instagram', 99)">
                                 Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button class="buy-btn cart-btn" onclick="addToCart('10,000+ Reels & Ads for Instagram', 99, '🎬')">
+                                Add to Cart
                             </button>
                         </div>
                     </div>
@@ -221,6 +243,9 @@
                             <button class="buy-btn" onclick="initiatePayment('1 Million+ Reels & Videos', 99)">
                                 Get Now <i class="fas fa-arrow-right"></i>
                             </button>
+                            <button class="buy-btn cart-btn" onclick="addToCart('1 Million+ Reels & Videos', 99, '🎥')">
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
 
@@ -232,6 +257,9 @@
                             <div class="carousel-price" >₹99</div>
                             <button class="buy-btn" onclick="initiatePayment('1000+ Mobile Apps', 99)">
                                 Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button class="buy-btn cart-btn" onclick="addToCart('1000+ Mobile Apps', 99, '📲')">
+                                Add to Cart
                             </button>
                         </div>
                     </div>
@@ -259,6 +287,26 @@
     </section>
 
     <div id="popup" class="popup">✅ Successfully sent your email!</div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>Shopping Cart</h2>
+                <button class="close-cart" onclick="toggleCart()">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <p class="empty-cart">Your cart is empty</p>
+            </div>
+            <div class="cart-footer" id="cartFooter" style="display: none;">
+                <div class="cart-total">
+                    <span class="total-label">Total: </span>
+                    <span class="total-price" id="cartTotal">₹0</span>
+                </div>
+                <button class="checkout-btn" onclick="proceedToCheckout()">Checkout</button>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="footer-content">
