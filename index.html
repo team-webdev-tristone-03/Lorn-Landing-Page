@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LORN VINGEST - Money Made Easy Here</title>
+
+    <!-- 🔹 FAVICON SETUP -->
+    <link rel="icon" type="image/x-icon" href="image/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="image/favicon.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="image/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="image/web-app-manifest-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="image/web-app-manifest-512x512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="image/apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        /* Add cursor pointer to price elements */
+        .product-slide-price,
+        .carousel-price {
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+        }
+        
+        .product-slide-price:hover,
+        .carousel-price:hover {
+            transform: scale(1.05);
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo -->
+    <div class="logo">
+        <img src="image/lorn.png" alt="LORN VINGEST Logo">
+    </div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Money Made Easy Here</h1>
+            <h2>Everything They Hide, I Teach.</h2>
+            <div class="cta-buttons">
+                <a href="" class="btn btn-primary">Learn How to Make Money Now</a>
+                <a href="#vault" class="btn btn-secondary">Join The Vault</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section about">
+        <h2 class="section-title">Who is Lorn Vingest?</h2>
+        <div class="about-text">
+            <p>A name whispered among those who seek the truth about online wealth.</p>
+            <p>Lorn Vingest isn't a person — it's a movement.</p>
+            <p>A place where secrets of digital wealth are decoded and simplified for anyone ready to rise.</p>
+        </div>
+    </section>
+
+    <section class="section mission">
+        <h2 class="section-title">The Mission</h2>
+        <ul class="mission-list">
+            <li>To expose the hidden ways of modern money.</li>
+            <li>To make everyone financially independent using AI, Crypto, NFTs, Automation, and Future-Tech.</li>
+            <li>No fluff. No lies. Only what works.</li>
+        </ul>
+    </section>
+
+    <section class="section products" id="products">
+        <h2 class="section-title">Featured Wealth Systems</h2>
+        <div class="products-grid-center">
+            <div class="product-card-center">
+                <div class="product-icon">💼</div>
+                <h3 class="product-title">Digital Products</h3>
+                <p class="product-desc">Sell digital assets like eBooks, tools, and courses. Build online income with zero inventory.</p>
+                <button onclick="toggleProductsSlider()" class="product-btn">Learn More</button>
+            </div>
+        </div>
+
+        <div id="productsSlider" class="products-slider-container">
+            <h3 class="slider-heading">View Our Digital Products</h3>
+            <div class="products-slider">
+                <div class="product-slide">
+                    <div class="product-slide-image">📞</div>
+                    <h4 class="product-slide-title">All India Leads</h4>
+                    <p class="product-slide-price" >₹99</p>
+                    <button onclick="initiatePayment('All India Leads', 99)" class="buy-btn">Buy Now</button>
+                </div>
+                <div class="product-slide">
+                    <div class="product-slide-image">💼</div>
+                    <h4 class="product-slide-title">Salaried Employee Verified Leads</h4>
+                    <p class="product-slide-price" >₹49</p>
+                    <button onclick="initiatePayment('Salaried Employee Verified Leads', 49)" class="buy-btn">Buy Now</button>
+                </div>
+                <div class="product-slide">
+                    <div class="product-slide-image">✅</div>
+                    <h4 class="product-slide-title">Verified Employees Leads</h4>
+                    <p class="product-slide-price" >₹49</p>
+                    <button onclick="initiatePayment('Verified Employees Leads', 49)" class="buy-btn">Buy Now</button>
+                </div>
+                <div class="product-slide">
+                    <div class="product-slide-image">🇮🇳</div>
+                    <h4 class="product-slide-title">Pan India Database</h4>
+                    <p class="product-slide-price" >₹99</p>
+                    <button onclick="initiatePayment('Pan India Database', 99)" class="buy-btn">Buy Now</button>
+                </div>
+                <div class="product-slide">
+                    <div class="product-slide-image">📊</div>
+                    <h4 class="product-slide-title">1 Crore+ Bulk Leads</h4>
+                    <p class="product-slide-price" >₹99</p>
+                    <button onclick="initiatePayment('1 Crore+ Bulk Leads', 99)" class="buy-btn">Buy Now</button>
+                </div>
+                <div class="product-slide">
+                    <div class="product-slide-image">🎬</div>
+                    <h4 class="product-slide-title">10,000+ Reels & Ads for Instagram</h4>
+                    <p class="product-slide-price" >₹99</p>
+                    <button onclick="initiatePayment('10,000+ Reels & Ads for Instagram', 99)" class="buy-btn">Buy Now</button>
+                </div>
+                <div class="product-slide">
+                    <div class="product-slide-image">📹</div>
+                    <h4 class="product-slide-title">1 Million+ Reels & Videos</h4>
+                    <p class="product-slide-price" >₹99</p>
+                    <button onclick="initiatePayment('1 Million+ Reels & Videos', 99)" class="buy-btn">Buy Now</button>
+                </div>
+                <div class="product-slide">
+                    <div class="product-slide-image">📱</div>
+                    <h4 class="product-slide-title">1000+ Mobile Apps to Publish</h4>
+                    <p class="product-slide-price" >₹99</p>
+                    <button onclick="initiatePayment('1000+ Mobile Apps to Publish', 99)" class="buy-btn">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="carousel-section">
+        <h2 class="section-title">Explore Our Products</h2>
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- Product 1 -->
+                    <div class="carousel-item active">
+                        <div class="carousel-image">📱</div>
+                        <div class="carousel-content">
+                            <h3 class="carousel-title">All India Leads</h3>
+                            <div class="carousel-price" >₹99</div>
+                            <button class="buy-btn" onclick="initiatePayment('All India Leads', 99)">
+                                Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="carousel-item next">
+                        <div class="carousel-image">💼</div>
+                        <div class="carousel-content">
+                            <h3 class="carousel-title">Salaried Employee Verified Leads</h3>
+                            <div class="carousel-price" >₹49</div>
+                            <button class="buy-btn" onclick="initiatePayment('Salaried Employee Verified Leads', 49)">
+                                Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="carousel-item">
+                        <div class="carousel-image">✅</div>
+                        <div class="carousel-content">
+                            <h3 class="carousel-title">Verified Employees Leads</h3>
+                            <div class="carousel-price" >₹49</div>
+                            <button class="buy-btn" onclick="initiatePayment('Verified Employees Leads', 49)">
+                                Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="carousel-item">
+                        <div class="carousel-image">🗺️</div>
+                        <div class="carousel-content">
+                            <h3 class="carousel-title">Pan India Database</h3>
+                            <div class="carousel-price" >₹99</div>
+                            <button class="buy-btn" onclick="initiatePayment('Pan India Database', 99)">
+                                Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 5 -->
+                    <div class="carousel-item">
+                        <div class="carousel-image">📊</div>
+                        <div class="carousel-content">
+                            <h3 class="carousel-title">1 Crore+ Bulk Leads</h3>
+                            <div class="carousel-price" >₹99</div>
+                            <button class="buy-btn" onclick="initiatePayment('1 Crore+ Bulk Leads', 99)">
+                                Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 6 -->
+                    <div class="carousel-item">
+                        <div class="carousel-image">🎬</div>
+                        <div class="carousel-content">
+                            <h3 class="carousel-title">10,000+ Reels & Ads for Instagram</h3>
+                            <div class="carousel-price" >₹99</div>
+                            <button class="buy-btn" onclick="initiatePayment('10,000+ Reels & Ads for Instagram', 99)">
+                                Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 7 -->
+                    <div class="carousel-item">
+                        <div class="carousel-image">🎥</div>
+                        <div class="carousel-content">
+                            <h3 class="carousel-title">1 Million+ Reels & Videos</h3>
+                            <div class="carousel-price" >₹99</div>
+                            <button class="buy-btn" onclick="initiatePayment('1 Million+ Reels & Videos', 99)">
+                                Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 8 -->
+                    <div class="carousel-item">
+                        <div class="carousel-image">📲</div>
+                        <div class="carousel-content">
+                            <h3 class="carousel-title">1000+ Mobile Apps for Play Store & App Store</h3>
+                            <div class="carousel-price" >₹99</div>
+                            <button class="buy-btn" onclick="initiatePayment('1000+ Mobile Apps', 99)">
+                                Get Now <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-buttons">
+                <button class="nav-btn" id="prevBtn" onclick="prevSlide()">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <button class="nav-btn" id="nextBtn" onclick="nextSlide()">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="carousel-indicators" id="indicators"></div>
+        </div>
+    </section>
+
+    <section class="vault" id="vault">
+        <h2 class="section-title">The Secrets Are Not for Everyone</h2>
+        <p class="vault-subtitle">Enter your email and get the first chapter of "Digital Money Codex" free.</p>
+        <form id="vaultForm" class="email-form">
+            <input type="email" id="userEmail" class="email-input" placeholder="Enter your email..." required />
+            <button type="submit" class="btn btn-primary">Join us</button>
+        </form>
+    </section>
+
+    <div id="popup" class="popup">✅ Successfully sent your email!</div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-links-group">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="termsandcondition.html">Terms & Conditions</a>
+                        <a href="refundpolicy.html">Refund Policy</a>
+                        <a href="privacypolicy.html">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/lornvingest?igsh=anA1b3hhM2dlNmwy" target="_blank" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://x.com/LornVingest?t=5ggj-kMKdWjroPDtEEaG9w&s=09" target="_blank" aria-label="X (Twitter)">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LORN VINGEST. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

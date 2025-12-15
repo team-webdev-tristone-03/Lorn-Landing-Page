@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Purchase - LORN VINGEST</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="image/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="image/favicon.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="image/favicon-96x96.png">
+    
+    <!-- Razorpay Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <!-- jsPDF Library for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ===== GLOBAL RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ===== BODY STYLING ===== */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #000000 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ===== LOGO SECTION ===== */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 0 1rem 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .logo-section img {
+            height: 150px;
+            width: auto;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.6));
+            margin-bottom: 1rem;
+        }
+
+        .company-name {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient 4s ease infinite;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .payment-container {
+            max-width: 600px;
+            width: 90%;
+            margin: 3rem auto;
+            background: rgba(17, 17, 17, 0.9);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            border: 2px solid #333;
+            box-shadow: 0 20px 60px rgba(255, 0, 255, 0.3);
+        }
+
+        /* ===== TITLE STYLING ===== */
+        .payment-title {
+            font-size: 2rem;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .payment-subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 2.5rem;
+            font-size: 1rem;
+        }
+
+        /* ===== PRODUCT INFO SECTION ===== */
+        .product-info {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid #444;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            color: #ff00ff;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            color: #00ff88;
+            font-weight: 900;
+        }
+
+        /* ===== FORM STYLING ===== */
+        .payment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            color: #00ffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .form-input {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border: 2px solid #333;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: #666;
+        }
+
+        /* ===== PHONE NUMBER GROUP ===== */
+        .phone-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .country-code {
+            flex: 0 0 120px;
+        }
+
+        .phone-number {
+            flex: 1;
+        }
+
+        /* ===== SUBMIT BUTTON ===== */
+        .pay-button {
+            padding: 1.2rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: linear-gradient(45deg, #ff00ff, #ff0088);
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.4);
+        }
+
+        .pay-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(255, 0, 255, 0.7);
+        }
+
+        .pay-button:active {
+            transform: translateY(0);
+        }
+
+        /* ===== SECURITY NOTE ===== */
+        .security-note {
+            text-align: center;
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #333;
+        }
+
+        .security-note i {
+            color: #00ff88;
+            margin-right: 0.3rem;
+        }
+
+        /* ===== SUCCESS POPUP ===== */
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: #111;
+            padding: 3rem 4rem;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+            z-index: 1000;
+            text-align: center;
+            transition: transform 0.4s ease;
+        }
+
+        .success-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #00ff88;
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            font-size: 1.5rem;
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .success-details {
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        /* ===== OVERLAY ===== */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .logo-section img {
+                height: 100px;
+            }
+
+            .company-name {
+                font-size: 1.8rem;
+            }
+
+            .payment-container {
+                padding: 2rem 1.5rem;
+                margin: 2rem auto;
+            }
+
+            .payment-title {
+                font-size: 1.5rem;
+            }
+
+            .phone-group {
+                flex-direction: column;
+            }
+
+            .country-code {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .company-name {
+                font-size: 1.5rem;
+            }
+
+            .payment-container {
+                width: 95%;
+                padding: 1.5rem 1rem;
+            }
+
+            .success-popup {
+                padding: 2rem 2.5rem;
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo Section -->
+    <div class="logo-section">
+        <img src="image/lorn.png" alt="LORN VINGEST Logo">
+        <h1 class="company-name">LORN VINGEST</h1>
+    </div>
+
+    <!-- Payment Container -->
+    <div class="payment-container">
+        <h2 class="payment-title">Complete Your Purchase</h2>
+        <p class="payment-subtitle">Fill in your details to proceed with payment</p>
+
+        <!-- Product Information -->
+        <div class="product-info">
+            <div class="product-name" id="productName">Loading...</div>
+            <div class="product-price" id="productPrice">₹0</div>
+        </div>
+
+        <!-- Payment Form -->
+        <form class="payment-form" id="paymentForm">
+            <div class="form-group">
+                <label class="form-label" for="customerName">Full Name</label>
+                <input 
+                    type="text" 
+                    id="customerName" 
+                    class="form-input" 
+                    placeholder="Enter your full name" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="customerEmail">Email Address</label>
+                <input 
+                    type="email" 
+                    id="customerEmail" 
+                    class="form-input" 
+                    placeholder="your.email@example.com" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Contact Number</label>
+                <div class="phone-group">
+                    <input 
+                        type="text" 
+                        id="countryCode" 
+                        class="form-input country-code" 
+                        value="+91"
+                        readonly
+                    >
+                    <input 
+                        type="tel" 
+                        id="phoneNumber" 
+                        class="form-input phone-number" 
+                        placeholder="10-digit mobile number" 
+                        pattern="[0-9]{10}"
+                        maxlength="10"
+                        required
+                    >
+                </div>
+            </div>
+
+            <button type="submit" class="pay-button">
+                Proceed to Payment
+            </button>
+
+            <div class="security-note">
+                <i>🔒</i> Your payment information is secure and encrypted
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Popup -->
+    <div class="overlay" id="overlay"></div>
+    <div class="success-popup" id="successPopup">
+        <div class="success-icon">✓</div>
+        <div class="success-message">Payment Successful!</div>
+        <div class="success-details">Your invoice is being downloaded...</div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-links-group">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="termsandcondition.html">Terms & Conditions</a>
+                        <a href="refundpolicy.html">Refund Policy</a>
+                        <a href="privacypolicy.html">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/lornvingest?igsh=anA1b3hhM2dlNmwy" target="_blank" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://x.com/LornVingest?t=5ggj-kMKdWjroPDtEEaG9w&s=09" target="_blank" aria-label="X (Twitter)">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LORN VINGEST. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== GET PRODUCT DETAILS FROM URL =====
+        let productName = 'Digital Product';
+        let productPrice = 0;
+
+        function getProductDetailsFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('product');
+            const price = urlParams.get('price');
+            
+            if (name && price) {
+                productName = decodeURIComponent(name);
+                productPrice = parseInt(price);
+                
+                // Update UI
+                document.getElementById('productName').textContent = productName;
+                document.getElementById('productPrice').textContent = '₹' + productPrice;
+            } else {
+                // Default product if no params
+                document.getElementById('productName').textContent = 'Select a product';
+                document.getElementById('productPrice').textContent = '₹0';
+            }
+        }
+
+        // Load product details on page load
+        getProductDetailsFromURL();
+
+        // ===== PDF GENERATION FUNCTION =====
+        function generateInvoicePDF(paymentDetails) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Get current date and time
+            const currentDate = new Date();
+            const dateStr = currentDate.toLocaleDateString('en-IN', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            const timeStr = currentDate.toLocaleTimeString('en-IN', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            // Set colors
+            const primaryColor = [255, 0, 255]; // Magenta
+            const secondaryColor = [0, 255, 255]; // Cyan
+            const textColor = [0, 0, 0]; // Black
+            const lightGray = [200, 200, 200];
+            
+            // Company Header with Logo
+            doc.setFillColor(0, 0, 0);
+            doc.rect(0, 0, 210, 40, 'F');
+            
+            // Add Logo (if available)
+            try {
+                const logoImg = new Image();
+                logoImg.src = 'image/lorn.png';
+                doc.addImage(logoImg, 'PNG', 15, 8, 25, 25);
+            } catch(e) {
+                console.log('Logo not added');
+            }
+            
+            doc.setTextColor(255, 0, 255);
+            doc.setFontSize(28);
+            doc.setFont('helvetica', 'bold');
+            doc.text('LORN VINGEST', 105, 20, { align: 'center' });
+            
+            doc.setTextColor(0, 255, 255);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Digital Products & Services', 105, 30, { align: 'center' });
+            
+            // Invoice Title
+            doc.setTextColor(...textColor);
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.text('PAYMENT INVOICE', 105, 55, { align: 'center' });
+            
+            // Invoice divider line
+            doc.setDrawColor(...primaryColor);
+            doc.setLineWidth(1);
+            doc.line(20, 60, 190, 60);
+            
+            // Invoice Details Box
+            doc.setDrawColor(...lightGray);
+            doc.setLineWidth(0.5);
+            doc.roundedRect(20, 70, 170, 30, 3, 3);
+            
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...textColor);
+            doc.text('Invoice Number:', 25, 78);
+            doc.text('Payment Date:', 25, 86);
+            doc.text('Payment Time:', 25, 94);
+            
+            doc.setFont('helvetica', 'normal');
+            doc.text('INV-' + Date.now().toString().slice(-8), 70, 78);
+            doc.text(dateStr, 70, 86);
+            doc.text(timeStr, 70, 94);
+            
+            // Customer Details Section
+            doc.setFillColor(240, 240, 240);
+            doc.roundedRect(20, 110, 170, 45, 3, 3, 'F');
+            
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...primaryColor);
+            doc.text('CUSTOMER DETAILS', 25, 120);
+            
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...textColor);
+            doc.text('Name:', 25, 132);
+            doc.text('Email:', 25, 140);
+            doc.text('Contact:', 25, 148);
+            
+            doc.setFont('helvetica', 'normal');
+            doc.text(paymentDetails.name, 50, 132);
+            doc.text(paymentDetails.email, 50, 140);
+            doc.text(paymentDetails.contact, 50, 148);
+            
+            // Product Details Section
+            doc.setFillColor(240, 240, 240);
+            doc.roundedRect(20, 165, 170, 35, 3, 3, 'F');
+            
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...primaryColor);
+            doc.text('PRODUCT DETAILS', 25, 175);
+            
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...textColor);
+            doc.text('Product:', 25, 187);
+            doc.text('Amount Paid:', 25, 195);
+            
+            doc.setFont('helvetica', 'normal');
+            // Handle long product names with text wrapping
+            const productText = paymentDetails.productName.length > 45 
+                ? paymentDetails.productName.substring(0, 45) + '...' 
+                : paymentDetails.productName;
+            doc.text(productText, 50, 187);
+            doc.text('Rs. ' + paymentDetails.productPrice.toString(), 50, 195);
+            
+            // Payment ID
+            if (paymentDetails.paymentId) {
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'italic');
+                doc.setTextColor(100, 100, 100);
+                doc.text('Payment ID: ' + paymentDetails.paymentId, 105, 210, { align: 'center' });
+            }
+            
+            // Total Amount Box (Highlighted)
+            doc.setFillColor(...primaryColor);
+            doc.roundedRect(20, 220, 170, 20, 3, 3, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('TOTAL AMOUNT PAID:', 25, 232);
+            doc.text('Rs. ' + paymentDetails.productPrice.toString(), 165, 232, { align: 'right' });
+            
+            // Footer
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.setFont('helvetica', 'italic');
+            doc.text('Thank you for your purchase!', 105, 255, { align: 'center' });
+            doc.text('This is a computer-generated invoice and does not require a signature.', 105, 262, { align: 'center' });
+            
+            doc.setFontSize(8);
+            doc.text('For any queries, contact us at info@lornvingest.com', 105, 275, { align: 'center' });
+            
+            // Save PDF
+            const fileName = 'LORN_VINGEST_Invoice_' + Date.now() + '.pdf';
+            doc.save(fileName);
+        }
+
+        // ===== PAYMENT FORM SUBMISSION =====
+        const paymentForm = document.getElementById('paymentForm');
+        const overlay = document.getElementById('overlay');
+        const successPopup = document.getElementById('successPopup');
+
+        paymentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const countryCode = document.getElementById('countryCode').value;
+            
+            // Validate product price
+            if (productPrice === 0) {
+                alert('Please select a product first!');
+                return;
+            }
+            
+            // Open Razorpay
+            openRazorpay(customerName, customerEmail, countryCode + phoneNumber);
+        });
+
+        // ===== RAZORPAY INTEGRATION =====
+        function openRazorpay(name, email, contact) {
+            const amountInPaise = productPrice * 100;
+            
+            const options = {
+                key: "rzp_test_RMLp1U4xSLkunP", // Replace with your actual Razorpay Key ID
+                amount: amountInPaise,
+                currency: "INR",
+                name: "LORN VINGEST",
+                description: productName,
+                image: "image/lorn.png",
+                handler: function (response) {
+                    // Payment successful - Generate PDF Invoice
+                    const paymentDetails = {
+                        name: name,
+                        email: email,
+                        contact: contact,
+                        productName: productName,
+                        productPrice: productPrice,
+                        paymentId: response.razorpay_payment_id
+                    };
+                    
+                    // Generate and download PDF
+                    generateInvoicePDF(paymentDetails);
+                    
+                    // Show success popup
+                    overlay.classList.add('show');
+                    successPopup.classList.add('show');
+                    
+                    // Hide after 3 seconds and redirect
+                    setTimeout(() => {
+                        overlay.classList.remove('show');
+                        successPopup.classList.remove('show');
+                        window.location.href = 'index.html';
+                    }, 3000);
+                },
+                prefill: {
+                    name: name,
+                    email: email,
+                    contact: contact
+                },
+                theme: {
+                    color: "#ff00ff"
+                },
+                modal: {
+                    ondismiss: function() {
+                        console.log('Payment cancelled by user');
+                    }
+                }
+            };
+            
+            const rzp = new Razorpay(options);
+            rzp.open();
+        }
+    </script>
+</body>
+</html>
