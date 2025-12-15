@@ -1,9 +1,13 @@
 let currentSlide = 0;
 const totalSlides = 8;
-const items = document.querySelectorAll('.carousel-item');
 
 function initCarousel() {
+    const items = document.querySelectorAll('.carousel-item');
     const indicatorsContainer = document.getElementById('indicators');
+    
+    // Clear existing indicators
+    indicatorsContainer.innerHTML = '';
+    
     for (let i = 0; i < totalSlides; i++) {
         const indicator = document.createElement('div');
         indicator.className = 'indicator';
@@ -15,7 +19,11 @@ function initCarousel() {
 }
 
 function updateCarousel() {
+    const items = document.querySelectorAll('.carousel-item');
     const indicators = document.querySelectorAll('.indicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
     items.forEach((item, index) => {
         item.classList.remove('active', 'prev', 'next');
         if (index === currentSlide) {
@@ -26,11 +34,20 @@ function updateCarousel() {
             item.classList.add('next');
         }
     });
+    
     indicators.forEach((indicator, index) => {
         indicator.classList.toggle('active', index === currentSlide);
     });
-    document.getElementById('prevBtn').disabled = currentSlide === 0;
-    document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+    
+    // Update button states
+    if (prevBtn) {
+        prevBtn.disabled = currentSlide === 0;
+        prevBtn.style.opacity = currentSlide === 0 ? '0.5' : '1';
+    }
+    if (nextBtn) {
+        nextBtn.disabled = currentSlide === totalSlides - 1;
+        nextBtn.style.opacity = currentSlide === totalSlides - 1 ? '0.5' : '1';
+    }
 }
 
 function nextSlide() {
@@ -57,7 +74,30 @@ function initiatePayment(productName, price) {
     window.location.href = 'pay.html';
 }
 
-initCarousel();
+// Initialize carousel when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initCarousel();
+    
+    // Add keyboard navigation for carousel
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') {
+            prevSlide();
+        } else if (e.key === 'ArrowRight') {
+            nextSlide();
+        }
+    });
+    
+    // Ensure all buttons have proper focus states
+    const buttons = document.querySelectorAll('button, .btn');
+    buttons.forEach(button => {
+        button.addEventListener('focus', function() {
+            this.style.outline = '2px solid #00ffff';
+        });
+        button.addEventListener('blur', function() {
+            this.style.outline = 'none';
+        });
+    });
+});
 
 // Force cart icon to be visible
 document.addEventListener('DOMContentLoaded', function() {
@@ -105,15 +145,32 @@ form.addEventListener('submit', function (e) {
 
 function toggleProductsSlider() {
     const slider = document.getElementById('productsSlider');
+    const button = event.target;
+    
     slider.classList.toggle('active');
+    
     if (slider.classList.contains('active')) {
+        button.textContent = 'Hide Products';
+        button.style.background = '#ff4444';
         setTimeout(() => {
             slider.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 100);
+    } else {
+        button.textContent = 'Learn More';
+        button.style.background = '#00ffff';
     }
 }
 function initiatePayment(productName, price) {
-    window.location.href = `pay.html?product=${encodeURIComponent(productName)}&price=${price}`;
+    // Show loading state
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    button.disabled = true;
+    
+    // Simulate processing delay for better UX
+    setTimeout(() => {
+        window.location.href = `pay.html?product=${encodeURIComponent(productName)}&price=${price}`;
+    }, 500);
 }
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -277,3 +334,33 @@ function testCart() {
     console.log('Cart badge element:', document.getElementById('cartBadge'));
     console.log('Current cart:', cart);
     addToCart('Test Product', 99, '🧪');
+}
+
+// Test all button functionality
+function testAllButtons() {
+    console.log('Testing all button functionality...');
+    
+    // Test carousel buttons
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    console.log('Previous button:', prevBtn ? 'Found' : 'Missing');
+    console.log('Next button:', nextBtn ? 'Found' : 'Missing');
+    
+    // Test Learn More button
+    const learnMoreBtn = document.querySelector('.product-btn');
+    console.log('Learn More button:', learnMoreBtn ? 'Found' : 'Missing');
+    
+    // Test payment buttons
+    const paymentButtons = document.querySelectorAll('.buy-btn:not(.cart-btn)');
+    console.log('Payment buttons found:', paymentButtons.length);
+    
+    // Test cart buttons
+    const cartButtons = document.querySelectorAll('.cart-btn');
+    console.log('Cart buttons found:', cartButtons.length);
+    
+    // Test navigation links
+    const navLinks = document.querySelectorAll('a[href^="#"]');
+    console.log('Navigation links found:', navLinks.length);
+    
+    console.log('All buttons tested successfully!');
+}
