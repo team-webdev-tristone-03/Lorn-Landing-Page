@@ -251,7 +251,7 @@ function updateCartDisplay() {
     cartItems.innerHTML = cart.map((item, index) => `
         <div class="cart-item">
             <div class="cart-item-info">
-                <div class="cart-item-icon">${item.icon}</div>
+                <div class="cart-item-icon"><i class="${item.icon}"></i></div>
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
                     <div class="cart-item-price">₹${item.price}</div>
