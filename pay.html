@@ -720,6 +720,25 @@
                 description: productName,
                 image: "image/lorn.png",
                 handler: function (response) {
+                    // Get cart items from URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const cartItemsParam = urlParams.get('cartItems');
+                    let cartItems = [];
+                    
+                    if (cartItemsParam) {
+                        const items = decodeURIComponent(cartItemsParam).split('|');
+                        cartItems = items.map(item => {
+                            const [name, id] = item.split(':');
+                            return { name: name, productId: id || name.toLowerCase().replace(/\s+/g, '_') };
+                        });
+                    } else {
+                        // Single product
+                        cartItems = [{ 
+                            name: productName, 
+                            productId: productName.toLowerCase().replace(/\s+/g, '_') 
+                        }];
+                    }
+                    
                     // Payment successful - Generate PDF Invoice
                     const paymentDetails = {
                         name: name,
@@ -729,7 +748,8 @@
                         productPrice: productPrice,
                         paymentId: response.razorpay_payment_id,
                         timestamp: new Date(),
-                        status: 'completed'
+                        status: 'completed',
+                        cartItems: cartItems
                     };
                     
                     // Store payment data in Firebase

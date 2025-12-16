@@ -67,3 +67,8 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# Executable files (not allowed on Firebase Spark plan)
+*.bat
+*.exe
+*.sh
