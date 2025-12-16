@@ -133,6 +133,19 @@ const popup = document.getElementById('popup');
 form.addEventListener('submit', function (e) {
     e.preventDefault();
     const userEmail = document.getElementById('userEmail').value;
+    
+    // Store email in Firebase
+    const db = firebase.firestore();
+    db.collection('email_signups').add({
+        email: userEmail,
+        timestamp: new Date(),
+        source: 'vault_signup'
+    }).then(() => {
+        console.log('Email stored successfully');
+    }).catch((error) => {
+        console.error('Error storing email:', error);
+    });
+    
     popup.classList.add('show');
     setTimeout(() => {
         const subject = encodeURIComponent("New Vault Signup");

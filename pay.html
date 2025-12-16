@@ -272,6 +272,32 @@
             display: block;
         }
 
+        /* ===== BACK BUTTON ===== */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background: #00ffff;
+            color: #000;
+            transform: translateX(-3px);
+        }
+
         /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
             .logo-section img {
@@ -318,6 +344,11 @@
     </style>
 </head>
 <body>
+    <!-- Back Button -->
+    <button class="back-button" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+
     <!-- Logo Section -->
     <div class="logo-section">
         <img src="image/lorn.png" alt="LORN VINGEST Logo">
@@ -426,6 +457,40 @@
     </footer>
 
     <script>
+        // ===== BACK BUTTON FUNCTIONALITY =====
+        function goBack() {
+            window.history.back();
+        }
+
+        // ===== FIREBASE DATABASE FUNCTIONS =====
+        function storePaymentData(paymentDetails) {
+            const db = firebase.firestore();
+            
+            db.collection('payments').add(paymentDetails)
+                .then((docRef) => {
+                    console.log('Payment data stored with ID: ', docRef.id);
+                })
+                .catch((error) => {
+                    console.error('Error storing payment data: ', error);
+                });
+        }
+
+        function storeEmailSignup(email) {
+            const db = firebase.firestore();
+            
+            db.collection('email_signups').add({
+                email: email,
+                timestamp: new Date(),
+                source: 'vault_signup'
+            })
+                .then((docRef) => {
+                    console.log('Email signup stored with ID: ', docRef.id);
+                })
+                .catch((error) => {
+                    console.error('Error storing email signup: ', error);
+                });
+        }
+
         // ===== GET PRODUCT DETAILS FROM URL =====
         let productName = 'Digital Product';
         let productPrice = 0;
@@ -662,8 +727,13 @@
                         contact: contact,
                         productName: productName,
                         productPrice: productPrice,
-                        paymentId: response.razorpay_payment_id
+                        paymentId: response.razorpay_payment_id,
+                        timestamp: new Date(),
+                        status: 'completed'
                     };
+                    
+                    // Store payment data in Firebase
+                    storePaymentData(paymentDetails);
                     
                     // Generate and download PDF
                     generateInvoicePDF(paymentDetails);
@@ -699,8 +769,12 @@
         }
     </script>
 
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <!-- Firebase CDN -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
     <script src="./firebaseConfig.js"></script>
 </body>
