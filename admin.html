@@ -1,310 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - LORN VINGEST</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #000000 100%);
-            color: #fff;
-            min-height: 100vh;
-        }
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #000000 0%,
+          #1a0033 50%,
+          #000000 100%
+        );
+        color: #fff;
+        min-height: 100vh;
+      }
 
-        .header {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 1rem 2rem;
-            border-bottom: 2px solid #ff00ff;
-            display: flex;
-            justify-content: between;
-            align-items: center;
-        }
+      .header {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 1rem 2rem;
+        border-bottom: 2px solid #ff00ff;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+      }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
 
-        .logo h1 {
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 1.8rem;
-            font-weight: 900;
-        }
+      .logo h1 {
+        background: linear-gradient(45deg, #ff00ff, #00ffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.8rem;
+        font-weight: 900;
+      }
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            padding: 2rem;
-        }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem;
+      }
 
-        .stat-card {
-            background: rgba(17, 17, 17, 0.9);
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 1px solid #333;
-            text-align: center;
-        }
+      .stat-card {
+        background: rgba(17, 17, 17, 0.9);
+        padding: 1.5rem;
+        border-radius: 15px;
+        border: 1px solid #333;
+        text-align: center;
+      }
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #00ffff;
-            margin-bottom: 0.5rem;
-        }
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #00ffff;
+        margin-bottom: 0.5rem;
+      }
 
-        .stat-label {
-            color: #aaa;
-            font-size: 0.9rem;
-        }
+      .stat-label {
+        color: #aaa;
+        font-size: 0.9rem;
+      }
 
-        .dashboard-container {
-            padding: 2rem;
-        }
+      .dashboard-container {
+        padding: 2rem;
+      }
 
-        .section-title {
-            font-size: 1.5rem;
-            color: #ff00ff;
-            margin-bottom: 1.5rem;
-            text-align: center;
+      .section-title {
+        font-size: 1.5rem;
+        color: #ff00ff;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .filters {
+        background: rgba(17, 17, 17, 0.9);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .filter-input {
+        padding: 0.5rem;
+        border: 1px solid #333;
+        background: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        border-radius: 5px;
+        outline: none;
+      }
+
+      .filter-input:focus {
+        border-color: #00ffff;
+      }
+
+      .payments-table {
+        background: rgba(17, 17, 17, 0.9);
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid #333;
+      }
+
+      .table-header {
+        background: #ff00ff;
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr 1fr;
+        gap: 1rem;
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
+
+      .payment-row {
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr 1fr;
+        gap: 1rem;
+        border-bottom: 1px solid #333;
+        align-items: center;
+        font-size: 0.85rem;
+      }
+
+      .payment-row:hover {
+        background: rgba(255, 0, 255, 0.1);
+      }
+
+      .status-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .status-completed {
+        background: #28a745;
+        color: white;
+      }
+
+      .status-failed {
+        background: #dc3545;
+        color: white;
+      }
+
+      .products-list {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .view-btn {
+        background: linear-gradient(45deg, #00ffff, #0088ff);
+        color: white;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.7rem;
+      }
+
+      .view-btn:hover {
+        transform: scale(1.05);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+      }
+
+      .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #111;
+        padding: 2rem;
+        border-radius: 15px;
+        border: 2px solid #ff00ff;
+        max-width: 500px;
+        width: 90%;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: #ff00ff;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: #00ffff;
+      }
+
+      @media (max-width: 768px) {
+        .table-header,
+        .payment-row {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
         }
 
         .filters {
-            background: rgba(17, 17, 17, 0.9);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
+          flex-direction: column;
+          align-items: stretch;
         }
-
-        .filter-input {
-            padding: 0.5rem;
-            border: 1px solid #333;
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            border-radius: 5px;
-            outline: none;
-        }
-
-        .filter-input:focus {
-            border-color: #00ffff;
-        }
-
-        .payments-table {
-            background: rgba(17, 17, 17, 0.9);
-            border-radius: 15px;
-            overflow: hidden;
-            border: 1px solid #333;
-        }
-
-        .table-header {
-            background: #ff00ff;
-            padding: 1rem;
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr 1fr;
-            gap: 1rem;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .payment-row {
-            padding: 1rem;
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr 1fr;
-            gap: 1rem;
-            border-bottom: 1px solid #333;
-            align-items: center;
-            font-size: 0.85rem;
-        }
-
-        .payment-row:hover {
-            background: rgba(255, 0, 255, 0.1);
-        }
-
-        .status-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .status-completed {
-            background: #28a745;
-            color: white;
-        }
-
-        .status-failed {
-            background: #dc3545;
-            color: white;
-        }
-
-        .products-list {
-            max-width: 200px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .view-btn {
-            background: linear-gradient(45deg, #00ffff, #0088ff);
-            color: white;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-
-        .view-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #111;
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid #ff00ff;
-            max-width: 500px;
-            width: 90%;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: #ff00ff;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #00ffff;
-        }
-
-        @media (max-width: 768px) {
-            .table-header, .payment-row {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
-            }
-            
-            .filters {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header">
-        <div class="logo">
-            <i class="fas fa-chart-line" style="color: #ff00ff; font-size: 1.5rem;"></i>
-            <h1>LORN VINGEST Admin</h1>
-        </div>
-        <button onclick="logout()" class="view-btn" style="background: #dc3545;">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
+      <div class="logo">
+        <i
+          class="fas fa-chart-line"
+          style="color: #ff00ff; font-size: 1.5rem"
+        ></i>
+        <h1>LORN VINGEST Admin</h1>
+      </div>
+      <button onclick="logout()" class="view-btn" style="background: #dc3545">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
     </div>
 
     <div class="stats" id="statsContainer">
-        <div class="stat-card">
-            <div class="stat-number" id="totalPayments">0</div>
-            <div class="stat-label">Total Payments</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="totalRevenue">₹0</div>
-            <div class="stat-label">Total Revenue</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="totalCustomers">0</div>
-            <div class="stat-label">Unique Customers</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="emailsSent">0</div>
-            <div class="stat-label">Emails Sent</div>
-        </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalPayments">0</div>
+        <div class="stat-label">Total Payments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalRevenue">₹0</div>
+        <div class="stat-label">Total Revenue</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalCustomers">0</div>
+        <div class="stat-label">Unique Customers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="emailsSent">0</div>
+        <div class="stat-label">Emails Sent</div>
+      </div>
     </div>
 
     <div class="dashboard-container">
-        <h2 class="section-title">Payment Subscribers</h2>
-        
-        <div class="filters">
-            <input type="text" id="searchEmail" class="filter-input" placeholder="Search by email...">
-            <input type="text" id="searchName" class="filter-input" placeholder="Search by name...">
-            <select id="filterStatus" class="filter-input">
-                <option value="">All Status</option>
-                <option value="completed">Completed</option>
-                <option value="failed">Failed</option>
-            </select>
-            <button onclick="exportData()" class="view-btn">
-                <i class="fas fa-download"></i> Export CSV
-            </button>
-        </div>
+      <h2 class="section-title">Payment Subscribers</h2>
 
-        <div class="payments-table">
-            <div class="table-header">
-                <div>Date</div>
-                <div>Customer Details</div>
-                <div>Contact</div>
-                <div>Amount</div>
-                <div>Products</div>
-                <div>Status</div>
-                <div>Action</div>
-            </div>
-            <div id="paymentsContainer">
-                <div class="loading">
-                    <i class="fas fa-spinner fa-spin"></i> Loading payments...
-                </div>
-            </div>
+      <div class="filters">
+        <input
+          type="text"
+          id="searchEmail"
+          class="filter-input"
+          placeholder="Search by email..."
+        />
+        <input
+          type="text"
+          id="searchName"
+          class="filter-input"
+          placeholder="Search by name..."
+        />
+        <select id="filterStatus" class="filter-input">
+          <option value="">All Status</option>
+          <option value="completed">Completed</option>
+          <option value="failed">Failed</option>
+        </select>
+        <button onclick="exportData()" class="view-btn">
+          <i class="fas fa-download"></i> Export CSV
+        </button>
+      </div>
+
+      <div class="payments-table">
+        <div class="table-header">
+          <div>Date</div>
+          <div>Customer Details</div>
+          <div>Contact</div>
+          <div>Amount</div>
+          <div>Products</div>
+          <div>Status</div>
+          <div>Action</div>
         </div>
+        <div id="paymentsContainer">
+          <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Loading payments...
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Modal -->
     <div id="paymentModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 style="color: #ff00ff;">Payment Details</h3>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
-            <div id="modalContent"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 style="color: #ff00ff">Payment Details</h3>
+          <button class="close-btn" onclick="closeModal()">&times;</button>
         </div>
+        <div id="modalContent"></div>
+      </div>
     </div>
 
     <!-- Firebase CDN -->
@@ -313,185 +335,254 @@
     <script src="./firebaseConfig.js"></script>
 
     <script>
-        // Check admin authentication
-        if (!sessionStorage.getItem('adminLoggedIn')) {
-            window.location.href = 'admin-login.html';
+      // Check admin authentication
+      if (!sessionStorage.getItem("adminLoggedIn")) {
+        window.location.href = "admin-login.html";
+      }
+
+      let allPayments = [];
+      const db = firebase.firestore();
+
+      // Load payments data
+      async function loadPayments() {
+        try {
+          const snapshot = await db
+            .collection("payments")
+            .orderBy("timestamp", "desc")
+            .get();
+          allPayments = [];
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            allPayments.push({
+              id: doc.id,
+              ...data,
+              timestamp: data.timestamp?.toDate() || new Date(),
+            });
+          });
+
+          updateStats();
+          displayPayments(allPayments);
+        } catch (error) {
+          console.error("Error loading payments:", error);
+          document.getElementById("paymentsContainer").innerHTML =
+            '<div class="loading" style="color: #ff0000;">Error loading data</div>';
+        }
+      }
+
+      // Update statistics
+      function updateStats() {
+        const totalPayments = allPayments.length;
+        const totalRevenue = allPayments.reduce(
+          (sum, p) => sum + (p.productPrice || 0),
+          0
+        );
+        const uniqueEmails = new Set(allPayments.map((p) => p.email)).size;
+        const emailsSent = allPayments.filter(
+          (p) => p.emailSent === true
+        ).length;
+
+        document.getElementById("totalPayments").textContent = totalPayments;
+        document.getElementById("totalRevenue").textContent =
+          "₹" + totalRevenue;
+        document.getElementById("totalCustomers").textContent = uniqueEmails;
+        document.getElementById("emailsSent").textContent = emailsSent;
+      }
+
+      // Display payments in table
+      function displayPayments(payments) {
+        const container = document.getElementById("paymentsContainer");
+
+        if (payments.length === 0) {
+          container.innerHTML = '<div class="loading">No payments found</div>';
+          return;
         }
 
-        let allPayments = [];
-        const db = firebase.firestore();
-
-        // Load payments data
-        async function loadPayments() {
-            try {
-                const snapshot = await db.collection('payments').orderBy('timestamp', 'desc').get();
-                allPayments = [];
-                
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    allPayments.push({
-                        id: doc.id,
-                        ...data,
-                        timestamp: data.timestamp?.toDate() || new Date()
-                    });
-                });
-
-                updateStats();
-                displayPayments(allPayments);
-            } catch (error) {
-                console.error('Error loading payments:', error);
-                document.getElementById('paymentsContainer').innerHTML = 
-                    '<div class="loading" style="color: #ff0000;">Error loading data</div>';
-            }
-        }
-
-        // Update statistics
-        function updateStats() {
-            const totalPayments = allPayments.length;
-            const totalRevenue = allPayments.reduce((sum, p) => sum + (p.productPrice || 0), 0);
-            const uniqueEmails = new Set(allPayments.map(p => p.email)).size;
-            const emailsSent = allPayments.filter(p => p.emailSent === true).length;
-
-            document.getElementById('totalPayments').textContent = totalPayments;
-            document.getElementById('totalRevenue').textContent = '₹' + totalRevenue;
-            document.getElementById('totalCustomers').textContent = uniqueEmails;
-            document.getElementById('emailsSent').textContent = emailsSent;
-        }
-
-        // Display payments in table
-        function displayPayments(payments) {
-            const container = document.getElementById('paymentsContainer');
-            
-            if (payments.length === 0) {
-                container.innerHTML = '<div class="loading">No payments found</div>';
-                return;
-            }
-
-            container.innerHTML = payments.map(payment => `
+        container.innerHTML = payments
+          .map(
+            (payment) => `
                 <div class="payment-row">
                     <div>${payment.timestamp.toLocaleDateString()}</div>
                     <div>
-                        <strong>${payment.name || 'N/A'}</strong><br>
-                        <small style="color: #aaa;">${payment.email || 'N/A'}</small>
+                        <strong>${payment.name || "N/A"}</strong><br>
+                        <small style="color: #aaa;">${
+                          payment.email || "N/A"
+                        }</small>
                     </div>
-                    <div>${payment.contact || 'N/A'}</div>
+                    <div>${payment.contact || "N/A"}</div>
                     <div>₹${payment.productPrice || 0}</div>
-                    <div class="products-list" title="${getProductsText(payment.cartItems)}">
+                    <div class="products-list" title="${getProductsText(
+                      payment.cartItems
+                    )}">
                         ${getProductsText(payment.cartItems)}
                     </div>
                     <div>
-                        <span class="status-badge ${payment.status === 'completed' ? 'status-completed' : 'status-failed'}">
-                            ${payment.status || 'Unknown'}
+                        <span class="status-badge ${
+                          payment.status === "completed"
+                            ? "status-completed"
+                            : "status-failed"
+                        }">
+                            ${payment.status || "Unknown"}
                         </span>
                     </div>
                     <div>
-                        <button class="view-btn" onclick="viewPayment('${payment.id}')">
+                        <button class="view-btn" onclick="viewPayment('${
+                          payment.id
+                        }')">
                             <i class="fas fa-eye"></i> View
                         </button>
                     </div>
                 </div>
-            `).join('');
-        }
+            `
+          )
+          .join("");
+      }
 
-        // Get products text
-        function getProductsText(cartItems) {
-            if (!cartItems || !Array.isArray(cartItems)) return 'N/A';
-            return cartItems.map(item => item.name).join(', ');
-        }
+      // Get products text
+      function getProductsText(cartItems) {
+        if (!cartItems || !Array.isArray(cartItems)) return "N/A";
+        return cartItems.map((item) => item.name).join(", ");
+      }
 
-        // View payment details
-        function viewPayment(paymentId) {
-            const payment = allPayments.find(p => p.id === paymentId);
-            if (!payment) return;
+      // View payment details
+      function viewPayment(paymentId) {
+        const payment = allPayments.find((p) => p.id === paymentId);
+        if (!payment) return;
 
-            const modalContent = document.getElementById('modalContent');
-            modalContent.innerHTML = `
+        const modalContent = document.getElementById("modalContent");
+        modalContent.innerHTML = `
                 <div style="line-height: 1.6;">
-                    <p><strong>Payment ID:</strong> ${payment.paymentId || 'N/A'}</p>
-                    <p><strong>Customer:</strong> ${payment.name || 'N/A'}</p>
-                    <p><strong>Email:</strong> ${payment.email || 'N/A'}</p>
-                    <p><strong>Contact:</strong> ${payment.contact || 'N/A'}</p>
-                    <p><strong>Amount:</strong> ₹${payment.productPrice || 0}</p>
+                    <p><strong>Payment ID:</strong> ${
+                      payment.paymentId || "N/A"
+                    }</p>
+                    <p><strong>Customer:</strong> ${payment.name || "N/A"}</p>
+                    <p><strong>Email:</strong> ${payment.email || "N/A"}</p>
+                    <p><strong>Contact:</strong> ${payment.contact || "N/A"}</p>
+                    <p><strong>Amount:</strong> ₹${
+                      payment.productPrice || 0
+                    }</p>
                     <p><strong>Date:</strong> ${payment.timestamp.toLocaleString()}</p>
-                    <p><strong>Status:</strong> ${payment.status || 'Unknown'}</p>
-                    <p><strong>Email Sent:</strong> ${payment.emailSent ? 'Yes' : 'No'}</p>
-                    ${payment.emailSentAt ? `<p><strong>Email Sent At:</strong> ${payment.emailSentAt.toDate().toLocaleString()}</p>` : ''}
+                    <p><strong>Status:</strong> ${
+                      payment.status || "Unknown"
+                    }</p>
+                    <p><strong>Email Sent:</strong> ${
+                      payment.emailSent ? "Yes" : "No"
+                    }</p>
+                    ${
+                      payment.emailSentAt
+                        ? `<p><strong>Email Sent At:</strong> ${payment.emailSentAt
+                            .toDate()
+                            .toLocaleString()}</p>`
+                        : ""
+                    }
                     <p><strong>Products:</strong></p>
                     <ul style="margin-left: 20px; color: #aaa;">
-                        ${payment.cartItems ? payment.cartItems.map(item => `<li>${item.name}</li>`).join('') : '<li>No products</li>'}
+                        ${
+                          payment.cartItems
+                            ? payment.cartItems
+                                .map((item) => `<li>${item.name}</li>`)
+                                .join("")
+                            : "<li>No products</li>"
+                        }
                     </ul>
                 </div>
             `;
-            document.getElementById('paymentModal').style.display = 'block';
+        document.getElementById("paymentModal").style.display = "block";
+      }
+
+      // Close modal
+      function closeModal() {
+        document.getElementById("paymentModal").style.display = "none";
+      }
+
+      // Filter payments
+      function filterPayments() {
+        const emailSearch = document
+          .getElementById("searchEmail")
+          .value.toLowerCase();
+        const nameSearch = document
+          .getElementById("searchName")
+          .value.toLowerCase();
+        const statusFilter = document.getElementById("filterStatus").value;
+
+        const filtered = allPayments.filter((payment) => {
+          const emailMatch =
+            !emailSearch ||
+            (payment.email &&
+              payment.email.toLowerCase().includes(emailSearch));
+          const nameMatch =
+            !nameSearch ||
+            (payment.name && payment.name.toLowerCase().includes(nameSearch));
+          const statusMatch = !statusFilter || payment.status === statusFilter;
+
+          return emailMatch && nameMatch && statusMatch;
+        });
+
+        displayPayments(filtered);
+      }
+
+      // Export data
+      function exportData() {
+        const csv = [
+          [
+            "Date",
+            "Name",
+            "Email",
+            "Contact",
+            "Amount",
+            "Products",
+            "Status",
+            "Email Sent",
+          ],
+          ...allPayments.map((p) => [
+            p.timestamp.toLocaleDateString(),
+            p.name || "",
+            p.email || "",
+            p.contact || "",
+            p.productPrice || 0,
+            getProductsText(p.cartItems),
+            p.status || "",
+            p.emailSent ? "Yes" : "No",
+          ]),
+        ]
+          .map((row) => row.join(","))
+          .join("\n");
+
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "lorn-vingest-payments.csv";
+        a.click();
+      }
+
+      // Event listeners
+      document
+        .getElementById("searchEmail")
+        .addEventListener("input", filterPayments);
+      document
+        .getElementById("searchName")
+        .addEventListener("input", filterPayments);
+      document
+        .getElementById("filterStatus")
+        .addEventListener("change", filterPayments);
+
+      // Close modal on outside click
+      window.onclick = function (event) {
+        const modal = document.getElementById("paymentModal");
+        if (event.target === modal) {
+          closeModal();
         }
+      };
 
-        // Close modal
-        function closeModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-        }
+      // Logout function
+      function logout() {
+        sessionStorage.removeItem("adminLoggedIn");
+        window.location.href = "admin-login.html";
+      }
 
-        // Filter payments
-        function filterPayments() {
-            const emailSearch = document.getElementById('searchEmail').value.toLowerCase();
-            const nameSearch = document.getElementById('searchName').value.toLowerCase();
-            const statusFilter = document.getElementById('filterStatus').value;
-
-            const filtered = allPayments.filter(payment => {
-                const emailMatch = !emailSearch || (payment.email && payment.email.toLowerCase().includes(emailSearch));
-                const nameMatch = !nameSearch || (payment.name && payment.name.toLowerCase().includes(nameSearch));
-                const statusMatch = !statusFilter || payment.status === statusFilter;
-                
-                return emailMatch && nameMatch && statusMatch;
-            });
-
-            displayPayments(filtered);
-        }
-
-        // Export data
-        function exportData() {
-            const csv = [
-                ['Date', 'Name', 'Email', 'Contact', 'Amount', 'Products', 'Status', 'Email Sent'],
-                ...allPayments.map(p => [
-                    p.timestamp.toLocaleDateString(),
-                    p.name || '',
-                    p.email || '',
-                    p.contact || '',
-                    p.productPrice || 0,
-                    getProductsText(p.cartItems),
-                    p.status || '',
-                    p.emailSent ? 'Yes' : 'No'
-                ])
-            ].map(row => row.join(',')).join('\n');
-
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'lorn-vingest-payments.csv';
-            a.click();
-        }
-
-        // Event listeners
-        document.getElementById('searchEmail').addEventListener('input', filterPayments);
-        document.getElementById('searchName').addEventListener('input', filterPayments);
-        document.getElementById('filterStatus').addEventListener('change', filterPayments);
-
-        // Close modal on outside click
-        window.onclick = function(event) {
-            const modal = document.getElementById('paymentModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-
-        // Logout function
-        function logout() {
-            sessionStorage.removeItem('adminLoggedIn');
-            window.location.href = 'admin-login.html';
-        }
-
-        // Load data on page load
-        loadPayments();
+      // Load data on page load
+      loadPayments();
     </script>
-</body>
+  </body>
 </html>
