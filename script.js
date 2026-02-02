@@ -103,14 +103,21 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const cartIcon = document.getElementById('cartIcon');
     const cartBadge = document.getElementById('cartBadge');
+    const menuIcon = document.getElementById('menuIcon');
     
     if (cartIcon) {
         cartIcon.style.display = 'flex';
         console.log('Cart icon forced visible');
     }
     
+    if (menuIcon) {
+        menuIcon.style.display = 'flex';
+        console.log('Menu icon forced visible');
+    }
+    
     updateCartIcon();
     updateCartButtons();
+    updateMenuButtons();
     console.log('Cart initialized with', cart.length, 'items');
 });
 
@@ -135,16 +142,20 @@ form.addEventListener('submit', function (e) {
     const userEmail = document.getElementById('userEmail').value;
     
     // Store email in Firebase
-    const db = firebase.firestore();
-    db.collection('email_signups').add({
-        email: userEmail,
-        timestamp: new Date(),
-        source: 'vault_signup'
-    }).then(() => {
-        console.log('Email stored successfully');
-    }).catch((error) => {
-        console.error('Error storing email:', error);
-    });
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+        const db = firebase.firestore();
+        db.collection('email_signups').add({
+            email: userEmail,
+            timestamp: new Date(),
+            source: 'vault_signup',
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        }).then(() => {
+            console.log('Email stored successfully');
+        }).catch((error) => {
+            console.error('Error storing email:', error);
+        });
+    }
     
     popup.classList.add('show');
     setTimeout(() => {
@@ -158,6 +169,7 @@ form.addEventListener('submit', function (e) {
 
 function toggleProductsSlider() {
     const slider = document.getElementById('productsSlider');
+    const carouselSection = document.querySelector('.carousel-section');
     const button = event.target;
     
     slider.classList.toggle('active');
@@ -165,12 +177,14 @@ function toggleProductsSlider() {
     if (slider.classList.contains('active')) {
         button.textContent = 'Hide Products';
         button.style.background = '#ff4444';
+        carouselSection.classList.add('pushed-down');
         setTimeout(() => {
             slider.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 100);
     } else {
         button.textContent = 'Learn More';
         button.style.background = '#00ffff';
+        carouselSection.classList.remove('pushed-down');
     }
 }
 function initiatePayment(productName, price) {
@@ -201,7 +215,12 @@ function addToCart(name, price, icon) {
             saveCart();
             updateCartIcon();
             updateCartButtons();
+            updateMenuButtons();
             showAddedPopup(name);
+            
+            // Store cart action in Firebase
+            storeCartAction('add', name, price);
+            
             console.log('Item added successfully. Cart:', cart);
         } else {
             console.log('Item already in cart:', name);
@@ -212,11 +231,18 @@ function addToCart(name, price, icon) {
 }
 
 function removeFromCart(index) {
+    const removedItem = cart[index];
     cart.splice(index, 1);
     saveCart();
     updateCartIcon();
     updateCartButtons();
+    updateMenuButtons();
     updateCartDisplay();
+    
+    // Store cart removal action in Firebase
+    if (removedItem) {
+        storeCartAction('remove', removedItem.name, removedItem.price);
+    }
 }
 
 function updateCartIcon() {
@@ -273,6 +299,19 @@ function proceedToCheckout() {
     const cartData = cart.map(item => `${item.name}:${item.price}`).join('|');
     const total = cart.reduce((sum, item) => sum + item.price, 0);
     
+    // Store checkout attempt in Firebase
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+        const db = firebase.firestore();
+        db.collection('checkout_attempts').add({
+            cartItems: cart,
+            totalAmount: total,
+            itemCount: cart.length,
+            timestamp: new Date(),
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        }).catch(error => console.error('Error storing checkout attempt:', error));
+    }
+    
     window.location.href = `pay.html?cartItems=${encodeURIComponent(cartData)}&total=${total}`;
 }
 
@@ -281,14 +320,35 @@ function toggleCart() {
     
     if (modal.classList.contains('show')) {
         modal.classList.remove('show');
+        storeCartToggle('close');
         setTimeout(() => {
             modal.style.display = 'none';
         }, 400);
     } else {
         modal.style.display = 'flex';
+        storeCartToggle('open');
         setTimeout(() => {
             modal.classList.add('show');
             updateCartDisplay();
+        }, 10);
+    }
+}
+
+function toggleMenu() {
+    const modal = document.getElementById('menuModal');
+    
+    if (modal.classList.contains('show')) {
+        modal.classList.remove('show');
+        storeMenuToggle('close');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 400);
+    } else {
+        modal.style.display = 'flex';
+        storeMenuToggle('open');
+        setTimeout(() => {
+            modal.classList.add('show');
+            updateMenuButtons();
         }, 10);
     }
 }
@@ -311,6 +371,27 @@ function updateCartButtons() {
             button.style.background = 'transparent';
             button.style.color = '#00ffff';
             button.style.border = '2px solid #00ffff';
+            button.disabled = false;
+        }
+    });
+}
+
+function updateMenuButtons() {
+    const menuButtons = document.querySelectorAll('.menu-add-btn');
+    
+    menuButtons.forEach(button => {
+        const productName = button.getAttribute('onclick').match(/'([^']+)'/)[1];
+        const isInCart = cart.find(item => item.name === productName);
+        
+        if (isInCart) {
+            button.textContent = 'Added';
+            button.style.background = '#666';
+            button.style.color = '#999';
+            button.disabled = true;
+        } else {
+            button.textContent = 'Add to Cart';
+            button.style.background = 'linear-gradient(45deg, #00ff88, #00ffff)';
+            button.style.color = '#000';
             button.disabled = false;
         }
     });
@@ -376,4 +457,92 @@ function testAllButtons() {
     console.log('Navigation links found:', navLinks.length);
     
     console.log('All buttons tested successfully!');
+}
+
+// Firebase storage functions
+function storeCartAction(action, productName, price) {
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+        const db = firebase.firestore();
+        db.collection('cart_actions').add({
+            action: action,
+            productName: productName,
+            price: price,
+            timestamp: new Date(),
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        }).catch(error => console.error('Error storing cart action:', error));
+    }
+}
+
+function storeProductView(productName, price) {
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+        const db = firebase.firestore();
+        db.collection('product_views').add({
+            productName: productName,
+            price: price,
+            timestamp: new Date(),
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        }).catch(error => console.error('Error storing product view:', error));
+    }
+}
+
+function storeMenuToggle(action) {
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+        const db = firebase.firestore();
+        db.collection('user_interactions').add({
+            type: 'menu_toggle',
+            action: action,
+            timestamp: new Date(),
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        }).catch(error => console.error('Error storing menu toggle:', error));
+    }
+}
+
+function storeCartToggle(action) {
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+        const db = firebase.firestore();
+        db.collection('user_interactions').add({
+            type: 'cart_toggle',
+            action: action,
+            cartItemCount: cart.length,
+            timestamp: new Date(),
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        }).catch(error => console.error('Error storing cart toggle:', error));
+    }
+}
+
+let currentProductInfo = {};
+
+function showProductInfo(name, price, icon, description) {
+    currentProductInfo = { name, price: parseInt(price.replace('₹', '')), icon, description };
+    
+    // Store product view in Firebase
+    storeProductView(name, price);
+    
+    document.getElementById('productInfoTitle').textContent = name;
+    document.getElementById('productInfoDescription').textContent = description;
+    document.getElementById('productInfoPrice').textContent = price;
+    document.getElementById('productInfoIcon').innerHTML = `<i class="${icon}"></i>`;
+    
+    const modal = document.getElementById('productInfoModal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
+}
+
+function closeProductInfo() {
+    const modal = document.getElementById('productInfoModal');
+    modal.classList.remove('show');
+    setTimeout(() => modal.style.display = 'none', 400);
+}
+
+function addToCartFromInfo() {
+    addToCart(currentProductInfo.name, currentProductInfo.price, currentProductInfo.icon);
+    closeProductInfo();
+}
+
+function buyFromInfo() {
+    initiatePayment(currentProductInfo.name, currentProductInfo.price);
 }
