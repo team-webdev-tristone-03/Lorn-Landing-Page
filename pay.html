@@ -15,6 +15,15 @@
       href="image/favicon-96x96.png"
     />
 
+    <!-- EmailJS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <!-- Cart Management -->
+    <script src="cart.js"></script>
+    
+    <!-- EmailJS Integration -->
+    <script src="email-integration.js"></script>
+
     <!-- Razorpay Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -480,6 +489,12 @@
       </div>
     </footer>
 
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    <script src="./firebaseConfig.js"></script>
+
     <script>
       // ===== BACK BUTTON FUNCTIONALITY =====
       function goBack() {
@@ -498,6 +513,39 @@
           .catch((error) => {
             console.error("Error storing payment data: ", error);
           });
+      }
+
+      function storeCartItems(cartItems, total) {
+        const db = firebase.firestore();
+        
+        const cartData = {
+          items: cartItems,
+          totalAmount: total,
+          itemCount: cartItems.length,
+          timestamp: new Date(),
+          sessionId: getSessionId(),
+          userAgent: navigator.userAgent,
+          url: window.location.href,
+          status: 'payment_initiated'
+        };
+        
+        db.collection("cart_purchases")
+          .add(cartData)
+          .then((docRef) => {
+            console.log("Cart items stored with ID: ", docRef.id);
+          })
+          .catch((error) => {
+            console.error("Error storing cart items: ", error);
+          });
+      }
+
+      function getSessionId() {
+        let sessionId = localStorage.getItem('sessionId');
+        if (!sessionId) {
+          sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+          localStorage.setItem('sessionId', sessionId);
+        }
+        return sessionId;
       }
 
       function storeEmailSignup(email) {
@@ -520,40 +568,49 @@
       // ===== GET PRODUCT DETAILS FROM URL =====
       let productName = "Digital Product";
       let productPrice = 0;
+      let cartItems = [];
 
       function getProductDetailsFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
         const name = urlParams.get("product");
         const price = urlParams.get("price");
-        const cartItems = urlParams.get("cartItems");
+        const cartItemsParam = urlParams.get("cartItems");
         const total = urlParams.get("total");
 
         // Handle cart checkout
-        if (cartItems && total) {
-          const items = decodeURIComponent(cartItems).split("|");
-          const itemNames = items.map((item) => item.split(":")[0]).join(", ");
-
+        if (cartItemsParam && total) {
+          const items = decodeURIComponent(cartItemsParam).split("|");
+          cartItems = items.map(item => {
+            const [itemName, itemPrice] = item.split(":");
+            return { name: itemName, price: parseInt(itemPrice) };
+          });
+          
+          const itemNames = cartItems.map(item => item.name).join(", ");
           productName = itemNames.length > 50 ? "Multiple Products" : itemNames;
           productPrice = parseInt(total);
 
+          // Store cart items in Firebase
+          storeCartItems(cartItems, productPrice);
+
           // Update UI
           document.getElementById("productName").textContent = productName;
-          document.getElementById("productPrice").textContent =
-            "₹" + productPrice;
+          document.getElementById("productPrice").textContent = "₹" + productPrice;
         }
         // Handle single product
         else if (name && price) {
           productName = decodeURIComponent(name);
           productPrice = parseInt(price);
+          cartItems = [{ name: productName, price: productPrice }];
+
+          // Store single product as cart item
+          storeCartItems(cartItems, productPrice);
 
           // Update UI
           document.getElementById("productName").textContent = productName;
-          document.getElementById("productPrice").textContent =
-            "₹" + productPrice;
+          document.getElementById("productPrice").textContent = "₹" + productPrice;
         } else {
           // Default product if no params
-          document.getElementById("productName").textContent =
-            "Select a product";
+          document.getElementById("productName").textContent = "Select a product";
           document.getElementById("productPrice").textContent = "₹0";
         }
       }
@@ -634,7 +691,47 @@
         doc.setFont("helvetica", "normal");
         doc.text("INV-" + Date.now().toString().slice(-8), 70, 78);
         doc.text(dateStr, 70, 86);
-        doc.text(timeStr, 70, 94);
+        // Payment Form Submission
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const customerName = document.getElementById('customerName').value;
+          const customerEmail = document.getElementById('customerEmail').value;
+          const phoneNumber = document.getElementById('phoneNumber').value;
+          
+          const paymentData = {
+            customerName: customerName,
+            customerEmail: customerEmail,
+            phoneNumber: '+91' + phoneNumber,
+            productName: productName,
+            productPrice: productPrice,
+            cartItems: cartItems,
+            timestamp: new Date(),
+            sessionId: getSessionId(),
+            userAgent: navigator.userAgent,
+            status: 'payment_completed'
+          };
+          
+          // Store payment data in Firebase
+          storePaymentData(paymentData);
+          
+          // Show success popup
+          document.getElementById('overlay').style.display = 'block';
+          document.getElementById('successPopup').style.display = 'block';
+          
+          // Generate and download invoice
+          setTimeout(() => {
+            generateInvoicePDF(paymentData);
+            
+            // Clear cart from localStorage
+            localStorage.removeItem('cart');
+            
+            // Redirect after 3 seconds
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 3000);
+          }, 1000);
+        }););
 
         // Customer Details Section
         doc.setFillColor(240, 240, 240);
@@ -803,6 +900,21 @@
 
             // Store payment data in Firebase
             storePaymentData(paymentDetails);
+
+            // Send confirmation email using EmailJS
+            if (typeof handlePaymentSuccess === 'function') {
+              const urlParams = new URLSearchParams(window.location.search);
+              const sessionId = urlParams.get('sessionId') || getSessionId();
+              
+              handlePaymentSuccess({
+                customerEmail: email,
+                customerName: name,
+                cartItems: cartItems,
+                totalAmount: productPrice,
+                paymentId: response.razorpay_payment_id,
+                sessionId: sessionId
+              });
+            }
 
             // Generate and download PDF
             generateInvoicePDF(paymentDetails);

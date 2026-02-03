@@ -74,8 +74,14 @@ function initiatePayment(productName, price) {
     window.location.href = 'pay.html';
 }
 
-// Initialize carousel when DOM is loaded
+// Initialize cart storage on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Store initial cart state when page loads
+    if (cart.length > 0) {
+        storeCartInFirebase();
+    }
+    
+    // Initialize other functionality
     initCarousel();
     
     // Add keyboard navigation for carousel
@@ -211,15 +217,16 @@ function addToCart(name, price, icon) {
     
     try {
         if (!cart.find(item => item.name === name)) {
-            cart.push({ name, price, icon });
+            const cartItem = { name, price, icon, addedAt: new Date() };
+            cart.push(cartItem);
             saveCart();
             updateCartIcon();
             updateCartButtons();
             updateMenuButtons();
             showAddedPopup(name);
-            
-            // Store cart action in Firebase
-            storeCartAction('add', name, price);
+             
+            // Store complete cart state in Firebase
+            storeCartInFirebase();
             
             console.log('Item added successfully. Cart:', cart);
         } else {
@@ -239,10 +246,8 @@ function removeFromCart(index) {
     updateMenuButtons();
     updateCartDisplay();
     
-    // Store cart removal action in Firebase
-    if (removedItem) {
-        storeCartAction('remove', removedItem.name, removedItem.price);
-    }
+    // Store updated cart state in Firebase
+    storeCartInFirebase();
 }
 
 function updateCartIcon() {
@@ -300,17 +305,7 @@ function proceedToCheckout() {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
     
     // Store checkout attempt in Firebase
-    if (typeof firebase !== 'undefined' && firebase.firestore) {
-        const db = firebase.firestore();
-        db.collection('checkout_attempts').add({
-            cartItems: cart,
-            totalAmount: total,
-            itemCount: cart.length,
-            timestamp: new Date(),
-            userAgent: navigator.userAgent,
-            url: window.location.href
-        }).catch(error => console.error('Error storing checkout attempt:', error));
-    }
+    storeCheckoutAttempt(total);
     
     window.location.href = `pay.html?cartItems=${encodeURIComponent(cartData)}&total=${total}`;
 }
@@ -460,18 +455,47 @@ function testAllButtons() {
 }
 
 // Firebase storage functions
-function storeCartAction(action, productName, price) {
+function storeCartInFirebase() {
     if (typeof firebase !== 'undefined' && firebase.firestore) {
         const db = firebase.firestore();
-        db.collection('cart_actions').add({
-            action: action,
-            productName: productName,
-            price: price,
+        const cartData = {
+            items: cart,
+            itemCount: cart.length,
+            totalAmount: cart.reduce((sum, item) => sum + item.price, 0),
             timestamp: new Date(),
+            sessionId: getSessionId(),
             userAgent: navigator.userAgent,
             url: window.location.href
-        }).catch(error => console.error('Error storing cart action:', error));
+        };
+        
+        db.collection('cart_states').add(cartData)
+            .then(() => console.log('Cart stored in Firebase'))
+            .catch(error => console.error('Error storing cart:', error));
     }
+}
+
+function storeCheckoutAttempt(total) {
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+        const db = firebase.firestore();
+        db.collection('checkout_attempts').add({
+            cartItems: cart,
+            totalAmount: total,
+            itemCount: cart.length,
+            timestamp: new Date(),
+            sessionId: getSessionId(),
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        }).catch(error => console.error('Error storing checkout attempt:', error));
+    }
+}
+
+function getSessionId() {
+    let sessionId = localStorage.getItem('sessionId');
+    if (!sessionId) {
+        sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('sessionId', sessionId);
+    }
+    return sessionId;
 }
 
 function storeProductView(productName, price) {
