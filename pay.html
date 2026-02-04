@@ -24,6 +24,9 @@
     <!-- EmailJS Integration -->
     <script src="email-integration.js"></script>
 
+    <!-- Razorpay Configuration -->
+    <script src="razorpay-config.js"></script>
+    
     <!-- Razorpay Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -577,6 +580,8 @@
         const cartItemsParam = urlParams.get("cartItems");
         const total = urlParams.get("total");
 
+        console.log('URL Params:', { name, price, cartItemsParam, total });
+
         // Handle cart checkout
         if (cartItemsParam && total) {
           const items = decodeURIComponent(cartItemsParam).split("|");
@@ -586,15 +591,17 @@
           });
           
           const itemNames = cartItems.map(item => item.name).join(", ");
-          productName = itemNames.length > 50 ? "Multiple Products" : itemNames;
+          productName = itemNames.length > 50 ? "Multiple Products (" + cartItems.length + " items)" : itemNames;
           productPrice = parseInt(total);
+
+          console.log('Cart Items:', cartItems);
+          console.log('Total Price:', productPrice);
 
           // Store cart items in Firebase
           storeCartItems(cartItems, productPrice);
 
-          // Update UI
-          document.getElementById("productName").textContent = productName;
-          document.getElementById("productPrice").textContent = "₹" + productPrice;
+          // Update UI immediately
+          updateProductDisplay();
         }
         // Handle single product
         else if (name && price) {
@@ -605,17 +612,38 @@
           // Store single product as cart item
           storeCartItems(cartItems, productPrice);
 
-          // Update UI
-          document.getElementById("productName").textContent = productName;
-          document.getElementById("productPrice").textContent = "₹" + productPrice;
+          // Update UI immediately
+          updateProductDisplay();
         } else {
           // Default product if no params
-          document.getElementById("productName").textContent = "Select a product";
-          document.getElementById("productPrice").textContent = "₹0";
+          productName = "Select a product";
+          productPrice = 0;
+          updateProductDisplay();
         }
       }
 
+      function updateProductDisplay() {
+        const productNameElement = document.getElementById("productName");
+        const productPriceElement = document.getElementById("productPrice");
+        
+        if (productNameElement) {
+          productNameElement.textContent = productName;
+        }
+        
+        if (productPriceElement) {
+          productPriceElement.textContent = "₹" + productPrice;
+        }
+        
+        console.log('Updated display:', productName, '₹' + productPrice);
+      }
+
       // Load product details on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Page loaded, getting product details...');
+        getProductDetailsFromURL();
+      });
+      
+      // Also call immediately in case DOMContentLoaded already fired
       getProductDetailsFromURL();
 
       // ===== PDF GENERATION FUNCTION =====
@@ -854,7 +882,7 @@
         const amountInPaise = productPrice * 100;
 
         const options = {
-          key: "", // Replace with your actual Razorpay Key ID
+          key: getRazorpayKey(), // Uses key from razorpay-config.js
           amount: amountInPaise,
           currency: "INR",
           name: "LORN VINGEST",
@@ -961,5 +989,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
     <script src="./firebaseConfig.js"></script>
+    
+    <!-- Payment Script -->
+    <script src="payment-script.js"></script>
   </body>
 </html>

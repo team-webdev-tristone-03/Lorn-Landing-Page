@@ -109,6 +109,13 @@ class CartManager {
             return;
         }
 
+        const checkoutButton = this.cart.length > 0 ? `
+            <div class="cart-checkout">
+                <div class="cart-total-display">Total: ₹${this.getCartTotal()}</div>
+                <button class="checkout-btn" onclick="cartManager.proceedToCheckout()">Proceed to Payment</button>
+            </div>
+        ` : '';
+
         cartItemsContainer.innerHTML = this.cart.map(item => `
             <div class="cart-item">
                 <div class="item-info">
@@ -122,7 +129,7 @@ class CartManager {
                     <button class="remove-btn" onclick="cartManager.removeFromCart('${item.name}')">Remove</button>
                 </div>
             </div>
-        `).join('');
+        `).join('') + checkoutButton;
     }
 
     showAddedToCartMessage(productName) {
@@ -248,6 +255,40 @@ style.textContent = `
         color: #666;
         font-style: italic;
         padding: 20px;
+    }
+    
+    .cart-checkout {
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(255, 0, 255, 0.1);
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    .cart-total-display {
+        font-size: 1.2rem;
+        color: #00ff88;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    
+    .checkout-btn {
+        background: linear-gradient(45deg, #ff00ff, #00ffff);
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .checkout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 0, 255, 0.4);
     }
 `;
 document.head.appendChild(style);
