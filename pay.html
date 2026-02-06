@@ -15,18 +15,6 @@
       href="image/favicon-96x96.png"
     />
 
-    <!-- EmailJS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    
-    <!-- Cart Management -->
-    <script src="cart.js"></script>
-    
-    <!-- EmailJS Integration -->
-    <script src="email-integration.js"></script>
-
-    <!-- Razorpay Configuration -->
-    <script src="razorpay-config.js"></script>
-    
     <!-- Razorpay Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -492,12 +480,6 @@
       </div>
     </footer>
 
-    <!-- Firebase CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
-    <script src="./firebaseConfig.js"></script>
-
     <script>
       // ===== BACK BUTTON FUNCTIONALITY =====
       function goBack() {
@@ -719,48 +701,6 @@
         doc.setFont("helvetica", "normal");
         doc.text("INV-" + Date.now().toString().slice(-8), 70, 78);
         doc.text(dateStr, 70, 86);
-        // Payment Form Submission
-        document.getElementById('paymentForm').addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          const customerName = document.getElementById('customerName').value;
-          const customerEmail = document.getElementById('customerEmail').value;
-          const phoneNumber = document.getElementById('phoneNumber').value;
-          
-          const paymentData = {
-            customerName: customerName,
-            customerEmail: customerEmail,
-            phoneNumber: '+91' + phoneNumber,
-            productName: productName,
-            productPrice: productPrice,
-            cartItems: cartItems,
-            timestamp: new Date(),
-            sessionId: getSessionId(),
-            userAgent: navigator.userAgent,
-            status: 'payment_completed'
-          };
-          
-          // Store payment data in Firebase
-          storePaymentData(paymentData);
-          
-          // Show success popup
-          document.getElementById('overlay').style.display = 'block';
-          document.getElementById('successPopup').style.display = 'block';
-          
-          // Generate and download invoice
-          setTimeout(() => {
-            generateInvoicePDF(paymentData);
-            
-            // Clear cart from localStorage
-            localStorage.removeItem('cart');
-            
-            // Redirect after 3 seconds
-            setTimeout(() => {
-              window.location.href = 'index.html';
-            }, 3000);
-          }, 1000);
-        }););
-
         // Customer Details Section
         doc.setFillColor(240, 240, 240);
         doc.roundedRect(20, 110, 170, 45, 3, 3, "F");
@@ -989,6 +929,15 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
     <script src="./firebaseConfig.js"></script>
+    
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- EmailJS Integration -->
+    <script src="email-integration.js"></script>
+    
+    <!-- Razorpay Configuration -->
+    <script src="razorpay-config.js"></script>
     
     <!-- Payment Script -->
     <script src="payment-script.js"></script>

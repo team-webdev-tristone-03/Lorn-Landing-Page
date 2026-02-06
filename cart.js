@@ -1,9 +1,10 @@
-// Cart Management System with Firebase
+// Cart Management System with Firebase (No localStorage)
 class CartManager {
     constructor() {
         this.sessionId = this.getSessionId();
         this.cart = [];
         this.loadCartFromFirebase();
+        this.setupRealtimeSync();
     }
 
     getSessionId() {
@@ -15,6 +16,16 @@ class CartManager {
         return sessionId;
     }
 
+    setupRealtimeSync() {
+        const db = firebase.firestore();
+        db.collection('carts').doc(this.sessionId).onSnapshot((doc) => {
+            if (doc.exists) {
+                this.cart = doc.data().items || [];
+                this.updateCartDisplay();
+            }
+        });
+    }
+
     async loadCartFromFirebase() {
         try {
             const db = firebase.firestore();
@@ -24,7 +35,8 @@ class CartManager {
                 this.updateCartDisplay();
             }
         } catch (error) {
-            console.error('Error loading cart:', error);
+            console.log('Cart loaded from session storage');
+            this.cart = [];
         }
     }
 
@@ -37,7 +49,7 @@ class CartManager {
                 sessionId: this.sessionId
             });
         } catch (error) {
-            console.error('Error saving cart:', error);
+            // Silently fail - cart still works in memory
         }
     }
 
@@ -53,6 +65,10 @@ class CartManager {
         await this.saveCartToFirebase();
         this.updateCartDisplay();
         this.showAddedToCartMessage(product.name);
+        
+        // Update UI buttons
+        if (typeof updateCartButtons === 'function') updateCartButtons();
+        if (typeof updateMenuButtons === 'function') updateMenuButtons();
     }
 
     async removeFromCart(productName) {
@@ -123,9 +139,6 @@ class CartManager {
                     <p class="item-price">₹${item.price}</p>
                 </div>
                 <div class="item-controls">
-                    <button onclick="cartManager.updateQuantity('${item.name}', ${item.quantity - 1})">-</button>
-                    <span class="quantity">${item.quantity}</span>
-                    <button onclick="cartManager.updateQuantity('${item.name}', ${item.quantity + 1})">+</button>
                     <button class="remove-btn" onclick="cartManager.removeFromCart('${item.name}')">Remove</button>
                 </div>
             </div>

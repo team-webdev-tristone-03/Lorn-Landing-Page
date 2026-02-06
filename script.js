@@ -76,11 +76,6 @@ function initiatePayment(productName, price) {
 
 // Initialize cart storage on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Store initial cart state when page loads
-    if (cart.length > 0) {
-        storeCartInFirebase();
-    }
-    
     // Initialize other functionality
     initCarousel();
     
@@ -206,108 +201,50 @@ function initiatePayment(productName, price) {
     }, 500);
 }
 
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = [];
 
 function saveCart() {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    // Save to Firebase only
+    if (typeof cartManager !== 'undefined') {
+        cartManager.saveCartToFirebase();
+    }
 }
 
 function addToCart(name, price, icon) {
-    console.log('Adding to cart:', name, price, icon);
-    
-    try {
-        if (!cart.find(item => item.name === name)) {
-            const cartItem = { name, price, icon, addedAt: new Date() };
-            cart.push(cartItem);
-            saveCart();
-            updateCartIcon();
-            updateCartButtons();
-            updateMenuButtons();
-            showAddedPopup(name);
-             
-            // Store complete cart state in Firebase
-            storeCartInFirebase();
-            
-            console.log('Item added successfully. Cart:', cart);
-        } else {
-            console.log('Item already in cart:', name);
-        }
-    } catch (error) {
-        console.error('Error adding to cart:', error);
+    if (typeof cartManager !== 'undefined') {
+        cartManager.addToCart({ name, price, icon });
     }
 }
 
 function removeFromCart(index) {
-    const removedItem = cart[index];
-    cart.splice(index, 1);
-    saveCart();
-    updateCartIcon();
-    updateCartButtons();
-    updateMenuButtons();
-    updateCartDisplay();
-    
-    // Store updated cart state in Firebase
-    storeCartInFirebase();
+    if (typeof cartManager !== 'undefined' && cartManager.cart[index]) {
+        cartManager.removeFromCart(cartManager.cart[index].name);
+    }
 }
 
 function updateCartIcon() {
     const cartBadge = document.getElementById('cartBadge');
+    if (!cartBadge) return;
     
-    if (!cartBadge) {
-        console.error('Cart badge element not found');
-        return;
-    }
-    
-    if (cart.length > 0) {
-        cartBadge.textContent = cart.length;
+    const count = typeof cartManager !== 'undefined' ? cartManager.getCartCount() : 0;
+    if (count > 0) {
+        cartBadge.textContent = count;
         cartBadge.style.display = 'flex';
-        console.log('Cart badge updated:', cart.length);
     } else {
         cartBadge.style.display = 'none';
-        console.log('Cart badge hidden');
     }
 }
 
 function updateCartDisplay() {
-    const cartItems = document.getElementById('cartItems');
-    const cartFooter = document.getElementById('cartFooter');
-    const cartTotal = document.getElementById('cartTotal');
-    
-    if (cart.length === 0) {
-        cartItems.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
-        cartFooter.style.display = 'none';
-        return;
+    if (typeof cartManager !== 'undefined') {
+        cartManager.renderCartItems();
     }
-    
-    cartItems.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-            <div class="cart-item-info">
-                <div class="cart-item-icon"><i class="${item.icon}"></i></div>
-                <div class="cart-item-details">
-                    <h4>${item.name}</h4>
-                    <div class="cart-item-price">₹${item.price}</div>
-                </div>
-            </div>
-            <button class="delete-btn" onclick="removeFromCart(${index})">Remove</button>
-        </div>
-    `).join('');
-    
-    // Calculate and display total
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    cartTotal.textContent = `₹${total}`;
-    cartFooter.style.display = 'flex';
 }
 
 function proceedToCheckout() {
-    if (cart.length === 0) return;
-    
-    const cartData = cart.map(item => `${item.name}:${item.price}`).join('|');
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    
-    // Store checkout attempt in Firebase
-    storeCheckoutAttempt(total);
-    
-    window.location.href = `pay.html?cartItems=${encodeURIComponent(cartData)}&total=${total}`;
+    if (typeof cartManager !== 'undefined') {
+        cartManager.proceedToCheckout();
+    }
 }
 
 function toggleCart() {
@@ -350,10 +287,11 @@ function toggleMenu() {
 
 function updateCartButtons() {
     const cartButtons = document.querySelectorAll('.cart-btn');
+    const currentCart = typeof cartManager !== 'undefined' ? cartManager.cart : [];
     
     cartButtons.forEach(button => {
         const productName = button.getAttribute('onclick').match(/'([^']+)'/)[1];
-        const isInCart = cart.find(item => item.name === productName);
+        const isInCart = currentCart.find(item => item.name === productName);
         
         if (isInCart) {
             button.textContent = 'Product Added';
@@ -373,10 +311,11 @@ function updateCartButtons() {
 
 function updateMenuButtons() {
     const menuButtons = document.querySelectorAll('.menu-add-btn');
+    const currentCart = typeof cartManager !== 'undefined' ? cartManager.cart : [];
     
     menuButtons.forEach(button => {
         const productName = button.getAttribute('onclick').match(/'([^']+)'/)[1];
-        const isInCart = cart.find(item => item.name === productName);
+        const isInCart = currentCart.find(item => item.name === productName);
         
         if (isInCart) {
             button.textContent = 'Added';
@@ -454,46 +393,11 @@ function testAllButtons() {
     console.log('All buttons tested successfully!');
 }
 
-// Firebase storage functions
-function storeCartInFirebase() {
-    if (typeof firebase !== 'undefined' && firebase.firestore) {
-        const db = firebase.firestore();
-        const cartData = {
-            items: cart,
-            itemCount: cart.length,
-            totalAmount: cart.reduce((sum, item) => sum + item.price, 0),
-            timestamp: new Date(),
-            sessionId: getSessionId(),
-            userAgent: navigator.userAgent,
-            url: window.location.href
-        };
-        
-        db.collection('cart_states').add(cartData)
-            .then(() => console.log('Cart stored in Firebase'))
-            .catch(error => console.error('Error storing cart:', error));
-    }
-}
-
-function storeCheckoutAttempt(total) {
-    if (typeof firebase !== 'undefined' && firebase.firestore) {
-        const db = firebase.firestore();
-        db.collection('checkout_attempts').add({
-            cartItems: cart,
-            totalAmount: total,
-            itemCount: cart.length,
-            timestamp: new Date(),
-            sessionId: getSessionId(),
-            userAgent: navigator.userAgent,
-            url: window.location.href
-        }).catch(error => console.error('Error storing checkout attempt:', error));
-    }
-}
-
 function getSessionId() {
-    let sessionId = localStorage.getItem('sessionId');
+    let sessionId = sessionStorage.getItem('sessionId');
     if (!sessionId) {
         sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('sessionId', sessionId);
+        sessionStorage.setItem('sessionId', sessionId);
     }
     return sessionId;
 }
@@ -527,10 +431,11 @@ function storeMenuToggle(action) {
 function storeCartToggle(action) {
     if (typeof firebase !== 'undefined' && firebase.firestore) {
         const db = firebase.firestore();
+        const cartCount = typeof cartManager !== 'undefined' ? cartManager.getCartCount() : 0;
         db.collection('user_interactions').add({
             type: 'cart_toggle',
             action: action,
-            cartItemCount: cart.length,
+            cartItemCount: cartCount,
             timestamp: new Date(),
             userAgent: navigator.userAgent,
             url: window.location.href
