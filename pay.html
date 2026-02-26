@@ -567,15 +567,18 @@
         // Handle cart checkout
         if (cartItemsParam && total) {
           const items = decodeURIComponent(cartItemsParam).split("|");
+          console.log('Raw items:', items);
+          
           cartItems = items.map(item => {
             const [itemName, itemPrice] = item.split(":");
+            console.log('Item:', itemName, 'Price:', itemPrice);
             return { name: itemName, price: parseInt(itemPrice) };
           });
           
-          const itemNames = cartItems.map(item => item.name).join(", ");
-          productName = itemNames.length > 50 ? "Multiple Products (" + cartItems.length + " items)" : itemNames;
+          productName = cartItems.map(item => item.name).join(" + ");
           productPrice = parseInt(total);
 
+          console.log('Product Name:', productName);
           console.log('Cart Items:', cartItems);
           console.log('Total Price:', productPrice);
 

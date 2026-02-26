@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return { name: itemName, price: parseInt(itemPrice) };
         });
         
-        const itemNames = cartItems.map(item => item.name).join(", ");
-        productName = itemNames.length > 50 ? `Multiple Products (${cartItems.length} items)` : itemNames;
+        const itemNames = cartItems.map(item => item.name).join(" + ");
+        productName = itemNames;
         productPrice = parseInt(total);
     }
     

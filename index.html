@@ -182,7 +182,7 @@
       <div id="productsSlider" class="products-slider-container">
         <h3 class="slider-heading">View Our Digital Products</h3>
         <div class="products-slider">
-          <div class="product-slide" onclick="showProductInfo('All India Leads', '₹99', 'fas fa-phone', 'Complete database of verified leads across all states in India. Perfect for businesses looking to expand their customer base nationwide.')">
+          <div class="product-slide" onclick="window.location.href='allindia.html'">
             <div class="product-slide-image">
               <i class="fas fa-phone icon-phone"></i>
             </div>
@@ -191,7 +191,6 @@
             <button
               onclick="event.stopPropagation(); initiatePayment('All India Leads', 99)"
               class="buy-btn"
-              style="display: none"
             >
               Buy Now
             </button>
@@ -202,7 +201,7 @@
               Add to Cart
             </button>
           </div>
-          <div class="product-slide" onclick="showProductInfo('Salaried Employee Verified Leads', '₹49', 'fas fa-user-tie', 'Verified database of salaried employees with complete contact information. Ideal for financial services and B2B marketing.')">
+          <div class="product-slide" onclick="window.location.href='salariedemployee.html'">
             <div class="product-slide-image">
               <i class="fas fa-user-tie icon-user-tie"></i>
             </div>
@@ -213,7 +212,6 @@
             <button
               onclick="event.stopPropagation(); initiatePayment('Salaried Employee Verified Leads', 49)"
               class="buy-btn"
-              style="display: none"
             >
               Buy Now
             </button>
@@ -224,7 +222,7 @@
               Add to Cart
             </button>
           </div>
-          <div class="product-slide" onclick="showProductInfo('Verified Employees Leads', '₹49', 'fas fa-check-circle', 'Comprehensive database of verified employees with accurate contact details. Perfect for HR services and recruitment agencies.')">
+          <div class="product-slide" onclick="window.location.href='verifiedemployees.html'">
             <div class="product-slide-image">
               <i class="fas fa-check-circle icon-check"></i>
             </div>
@@ -233,7 +231,6 @@
             <button
               onclick="event.stopPropagation(); initiatePayment('Verified Employees Leads', 49)"
               class="buy-btn"
-              style="display: none"
             >
               Buy Now
             </button>
@@ -244,7 +241,7 @@
               Add to Cart
             </button>
           </div>
-          <div class="product-slide" onclick="showProductInfo('Pan India Database', '₹99', 'fas fa-flag', 'Complete pan-India database with state-wise categorized leads. Ideal for nationwide marketing campaigns and business expansion.')">
+          <div class="product-slide" onclick="window.location.href='panindia.html'">
             <div class="product-slide-image">
               <i class="fas fa-flag icon-map"></i>
             </div>
@@ -253,7 +250,6 @@
             <button
               onclick="event.stopPropagation(); initiatePayment('Pan India Database', 99)"
               class="buy-btn"
-              style="display: none"
             >
               Buy Now
             </button>
@@ -264,7 +260,7 @@
               Add to Cart
             </button>
           </div>
-          <div class="product-slide" onclick="showProductInfo('1 Crore+ Bulk Leads', '₹99', 'fas fa-chart-bar', 'Massive database of over 1 crore verified leads across multiple industries. Perfect for large-scale marketing operations.')">
+          <div class="product-slide" onclick="window.location.href='bulkleads.html'">
             <div class="product-slide-image">
               <i class="fas fa-chart-bar icon-chart"></i>
             </div>
@@ -273,7 +269,6 @@
             <button
               onclick="event.stopPropagation(); initiatePayment('1 Crore+ Bulk Leads', 99)"
               class="buy-btn"
-              style="display: none"
             >
               Buy Now
             </button>
@@ -284,7 +279,7 @@
               Add to Cart
             </button>
           </div>
-          <div class="product-slide" onclick="showProductInfo('10,000+ Reels & Ads for Instagram', '₹99', 'fas fa-film', 'Ready-to-use Instagram reels and advertisement templates. Boost your social media presence with professional content.')">
+          <div class="product-slide" onclick="window.location.href='instagramreels.html'">
             <div class="product-slide-image">
               <i class="fas fa-film icon-film"></i>
             </div>
@@ -295,7 +290,6 @@
             <button
               onclick="event.stopPropagation(); initiatePayment('10,000+ Reels & Ads for Instagram', 99)"
               class="buy-btn"
-              style="display: none"
             >
               Buy Now
             </button>
@@ -306,7 +300,7 @@
               Add to Cart
             </button>
           </div>
-          <div class="product-slide" onclick="showProductInfo('1 Million+ Reels & Videos', '₹99', 'fas fa-video', 'Massive collection of over 1 million reels and videos for content creation. Perfect for social media marketers and influencers.')">
+          <div class="product-slide" onclick="window.location.href='reelsvideos.html'">
             <div class="product-slide-image">
               <i class="fas fa-video icon-video"></i>
             </div>
@@ -315,7 +309,6 @@
             <button
               onclick="event.stopPropagation(); initiatePayment('1 Million+ Reels & Videos', 99)"
               class="buy-btn"
-              style="display: none"
             >
               Buy Now
             </button>
@@ -326,7 +319,7 @@
               Add to Cart
             </button>
           </div>
-          <div class="product-slide" onclick="showProductInfo('1000+ Mobile Apps to Publish', '₹99', 'fas fa-mobile-alt', 'Ready-to-publish mobile applications for Play Store and App Store. Start your app business with professionally developed apps.')">
+          <div class="product-slide" onclick="window.location.href='mobileapps.html'">
             <div class="product-slide-image">
               <i class="fas fa-mobile-alt icon-mobile"></i>
             </div>
@@ -335,7 +328,6 @@
             <button
               onclick="event.stopPropagation(); initiatePayment('1000+ Mobile Apps to Publish', 99)"
               class="buy-btn"
-              style="display: none"
             >
               Buy Now
             </button>
@@ -352,207 +344,142 @@
 
     <section class="carousel-section">
       <h2 class="section-title">Explore Our Products</h2>
-      <div class="carousel-container">
-        <div class="carousel-wrapper">
-          <div class="carousel-track" id="carouselTrack">
-            <!-- Product 1 -->
-            <div class="carousel-item active">
-              <div class="carousel-image">
-                <i class="fas fa-phone icon-phone"></i>
-              </div>
-              <div class="carousel-content">
-                <h3 class="carousel-title">All India Leads</h3>
-                <div class="carousel-price">₹99</div>
-                <button
-                  class="buy-btn"
-                  onclick="initiatePayment('All India Leads', 99)"
-                >
-                  Get Now <i class="fas fa-arrow-right"></i>
-                </button>
-                <button
-                  class="buy-btn cart-btn"
-                  onclick="addToCart('All India Leads', 99, 'fas fa-phone')"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-
-            <!-- Product 2 -->
-            <div class="carousel-item next">
-              <div class="carousel-image">
-                <i class="fas fa-user-tie icon-user-tie"></i>
-              </div>
-              <div class="carousel-content">
-                <h3 class="carousel-title">Salaried Employee Verified Leads</h3>
-                <div class="carousel-price">₹49</div>
-                <button
-                  class="buy-btn"
-                  onclick="initiatePayment('Salaried Employee Verified Leads', 49)"
-                >
-                  Get Now <i class="fas fa-arrow-right"></i>
-                </button>
-                <button
-                  class="buy-btn cart-btn"
-                  onclick="addToCart('Salaried Employee Verified Leads', 49, 'fas fa-user-tie')"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="carousel-item">
-              <div class="carousel-image">
-                <i class="fas fa-check-circle icon-check"></i>
-              </div>
-              <div class="carousel-content">
-                <h3 class="carousel-title">Verified Employees Leads</h3>
-                <div class="carousel-price">₹49</div>
-                <button
-                  class="buy-btn"
-                  onclick="initiatePayment('Verified Employees Leads', 49)"
-                >
-                  Get Now <i class="fas fa-arrow-right"></i>
-                </button>
-                <button
-                  class="buy-btn cart-btn"
-                  onclick="addToCart('Verified Employees Leads', 49, 'fas fa-check-circle')"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="carousel-item">
-              <div class="carousel-image">
-                <i class="fas fa-map-marked-alt icon-map"></i>
-              </div>
-              <div class="carousel-content">
-                <h3 class="carousel-title">Pan India Database</h3>
-                <div class="carousel-price">₹99</div>
-                <button
-                  class="buy-btn"
-                  onclick="initiatePayment('Pan India Database', 99)"
-                >
-                  Get Now <i class="fas fa-arrow-right"></i>
-                </button>
-                <button
-                  class="buy-btn cart-btn"
-                  onclick="addToCart('Pan India Database', 99, 'fas fa-map-marked-alt')"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-
-            <!-- Product 5 -->
-            <div class="carousel-item">
-              <div class="carousel-image">
-                <i class="fas fa-chart-bar icon-chart"></i>
-              </div>
-              <div class="carousel-content">
-                <h3 class="carousel-title">1 Crore+ Bulk Leads</h3>
-                <div class="carousel-price">₹99</div>
-                <button
-                  class="buy-btn"
-                  onclick="initiatePayment('1 Crore+ Bulk Leads', 99)"
-                >
-                  Get Now <i class="fas fa-arrow-right"></i>
-                </button>
-                <button
-                  class="buy-btn cart-btn"
-                  onclick="addToCart('1 Crore+ Bulk Leads', 99, 'fas fa-chart-bar')"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-
-            <!-- Product 6 -->
-            <div class="carousel-item">
-              <div class="carousel-image">
-                <i class="fas fa-film icon-film"></i>
-              </div>
-              <div class="carousel-content">
-                <h3 class="carousel-title">
-                  10,000+ Reels & Ads for Instagram
-                </h3>
-                <div class="carousel-price">₹99</div>
-                <button
-                  class="buy-btn"
-                  onclick="initiatePayment('10,000+ Reels & Ads for Instagram', 99)"
-                >
-                  Get Now <i class="fas fa-arrow-right"></i>
-                </button>
-                <button
-                  class="buy-btn cart-btn"
-                  onclick="addToCart('10,000+ Reels & Ads for Instagram', 99, 'fas fa-film')"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-
-            <!-- Product 7 -->
-            <div class="carousel-item">
-              <div class="carousel-image">
-                <i class="fas fa-video icon-video"></i>
-              </div>
-              <div class="carousel-content">
-                <h3 class="carousel-title">1 Million+ Reels & Videos</h3>
-                <div class="carousel-price">₹99</div>
-                <button
-                  class="buy-btn"
-                  onclick="initiatePayment('1 Million+ Reels & Videos', 99)"
-                >
-                  Get Now <i class="fas fa-arrow-right"></i>
-                </button>
-                <button
-                  class="buy-btn cart-btn"
-                  onclick="addToCart('1 Million+ Reels & Videos', 99, 'fas fa-video')"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-
-            <!-- Product 8 -->
-            <div class="carousel-item">
-              <div class="carousel-image">
-                <i class="fas fa-mobile-alt icon-mobile"></i>
-              </div>
-              <div class="carousel-content">
-                <h3 class="carousel-title">
-                  1000+ Mobile Apps for Play Store & App Store
-                </h3>
-                <div class="carousel-price">₹99</div>
-                <button
-                  class="buy-btn"
-                  onclick="initiatePayment('1000+ Mobile Apps', 99)"
-                >
-                  Get Now <i class="fas fa-arrow-right"></i>
-                </button>
-                <button
-                  class="buy-btn cart-btn"
-                  onclick="addToCart('1000+ Mobile Apps', 99, 'fas fa-mobile-alt')"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
+      <div class="products-grid">
+        <!-- Product 1 -->
+        <div class="grid-product-card">
+          <div class="grid-product-image">
+            <i class="fas fa-phone icon-phone"></i>
+          </div>
+          <div class="grid-product-content">
+            <h3 class="grid-product-title">All India Leads</h3>
+            <div class="grid-product-price">₹99</div>
+            <button class="buy-btn" onclick="initiatePayment('All India Leads', 99)">
+              Get Now <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="buy-btn cart-btn" onclick="addToCart('All India Leads', 99, 'fas fa-phone')">
+              Add to Cart
+            </button>
           </div>
         </div>
-        <div class="carousel-buttons">
-          <button class="nav-btn" id="prevBtn" onclick="prevSlide()">
-            <i class="fas fa-chevron-left"></i> Previous
-          </button>
-          <button class="nav-btn" id="nextBtn" onclick="nextSlide()">
-            Next <i class="fas fa-chevron-right"></i>
-          </button>
+
+        <!-- Product 2 -->
+        <div class="grid-product-card">
+          <div class="grid-product-image">
+            <i class="fas fa-user-tie icon-user-tie"></i>
+          </div>
+          <div class="grid-product-content">
+            <h3 class="grid-product-title">Salaried Employee Verified Leads</h3>
+            <div class="grid-product-price">₹49</div>
+            <button class="buy-btn" onclick="initiatePayment('Salaried Employee Verified Leads', 49)">
+              Get Now <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="buy-btn cart-btn" onclick="addToCart('Salaried Employee Verified Leads', 49, 'fas fa-user-tie')">
+              Add to Cart
+            </button>
+          </div>
         </div>
-        <div class="carousel-indicators" id="indicators"></div>
+
+        <!-- Product 3 -->
+        <div class="grid-product-card">
+          <div class="grid-product-image">
+            <i class="fas fa-check-circle icon-check"></i>
+          </div>
+          <div class="grid-product-content">
+            <h3 class="grid-product-title">Verified Employees Leads</h3>
+            <div class="grid-product-price">₹49</div>
+            <button class="buy-btn" onclick="initiatePayment('Verified Employees Leads', 49)">
+              Get Now <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="buy-btn cart-btn" onclick="addToCart('Verified Employees Leads', 49, 'fas fa-check-circle')">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="grid-product-card">
+          <div class="grid-product-image">
+            <i class="fas fa-map-marked-alt icon-map"></i>
+          </div>
+          <div class="grid-product-content">
+            <h3 class="grid-product-title">Pan India Database</h3>
+            <div class="grid-product-price">₹99</div>
+            <button class="buy-btn" onclick="initiatePayment('Pan India Database', 99)">
+              Get Now <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="buy-btn cart-btn" onclick="addToCart('Pan India Database', 99, 'fas fa-map-marked-alt')">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+
+        <!-- Product 5 -->
+        <div class="grid-product-card">
+          <div class="grid-product-image">
+            <i class="fas fa-chart-bar icon-chart"></i>
+          </div>
+          <div class="grid-product-content">
+            <h3 class="grid-product-title">1 Crore+ Bulk Leads</h3>
+            <div class="grid-product-price">₹99</div>
+            <button class="buy-btn" onclick="initiatePayment('1 Crore+ Bulk Leads', 99)">
+              Get Now <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="buy-btn cart-btn" onclick="addToCart('1 Crore+ Bulk Leads', 99, 'fas fa-chart-bar')">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+
+        <!-- Product 6 -->
+        <div class="grid-product-card">
+          <div class="grid-product-image">
+            <i class="fas fa-film icon-film"></i>
+          </div>
+          <div class="grid-product-content">
+            <h3 class="grid-product-title">10,000+ Reels & Ads for Instagram</h3>
+            <div class="grid-product-price">₹99</div>
+            <button class="buy-btn" onclick="initiatePayment('10,000+ Reels & Ads for Instagram', 99)">
+              Get Now <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="buy-btn cart-btn" onclick="addToCart('10,000+ Reels & Ads for Instagram', 99, 'fas fa-film')">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+
+        <!-- Product 7 -->
+        <div class="grid-product-card">
+          <div class="grid-product-image">
+            <i class="fas fa-video icon-video"></i>
+          </div>
+          <div class="grid-product-content">
+            <h3 class="grid-product-title">1 Million+ Reels & Videos</h3>
+            <div class="grid-product-price">₹99</div>
+            <button class="buy-btn" onclick="initiatePayment('1 Million+ Reels & Videos', 99)">
+              Get Now <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="buy-btn cart-btn" onclick="addToCart('1 Million+ Reels & Videos', 99, 'fas fa-video')">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+
+        <!-- Product 8 -->
+        <div class="grid-product-card">
+          <div class="grid-product-image">
+            <i class="fas fa-mobile-alt icon-mobile"></i>
+          </div>
+          <div class="grid-product-content">
+            <h3 class="grid-product-title">1000+ Mobile Apps for Play Store & App Store</h3>
+            <div class="grid-product-price">₹99</div>
+            <button class="buy-btn" onclick="initiatePayment('1000+ Mobile Apps', 99)">
+              Get Now <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="buy-btn cart-btn" onclick="addToCart('1000+ Mobile Apps', 99, 'fas fa-mobile-alt')">
+              Add to Cart
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -697,6 +624,27 @@
       </div>
     </div>
 
+    <!-- Buy Now Modal -->
+    <div id="buyNowModal" class="buy-now-modal">
+      <div class="buy-now-content">
+        <div class="buy-now-header">
+          <h2>Complete Your Purchase</h2>
+          <button class="close-buy-now" onclick="closeBuyNowModal()">&times;</button>
+        </div>
+        <div class="buy-now-body">
+          <div class="selected-product">
+            <h3 id="buyNowProductName">Product Name</h3>
+            <p class="buy-now-price" id="buyNowProductPrice">₹99</p>
+          </div>
+          <div class="suggested-section">
+            <h4>You may also like:</h4>
+            <div id="suggestedProducts" class="suggested-products"></div>
+          </div>
+          <button class="proceed-payment-btn" onclick="proceedToPaymentFromBuyNow()">Proceed to Payment</button>
+        </div>
+      </div>
+    </div>
+
     <footer>
       <div class="footer-content">
         <div class="footer-section">
@@ -754,5 +702,21 @@
     
     <!-- Main Script -->
     <script src="script.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            if (window.location.hash === '#buynow') {
+                const product = JSON.parse(sessionStorage.getItem('buyNowProduct') || '{}');
+                if (product.name) {
+                    sessionStorage.removeItem('buyNowProduct');
+                    showBuyNowModal(product.name, product.price);
+                }
+            }
+            if (sessionStorage.getItem('cartAdded') === 'true') {
+                sessionStorage.removeItem('cartAdded');
+                if (typeof updateCartIcon === 'function') updateCartIcon();
+                if (typeof updateCartDisplay === 'function') updateCartDisplay();
+            }
+        });
+    </script>
   </body>
 </html>

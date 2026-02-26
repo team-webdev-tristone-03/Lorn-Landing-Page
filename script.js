@@ -188,17 +188,99 @@ function toggleProductsSlider() {
         carouselSection.classList.remove('pushed-down');
     }
 }
+let buyNowProducts = [];
+
 function initiatePayment(productName, price) {
-    // Show loading state
-    const button = event.target;
-    const originalText = button.innerHTML;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-    button.disabled = true;
+    showBuyNowModal(productName, price);
+}
+
+function showBuyNowModal(productName, price) {
+    const modal = document.getElementById('buyNowModal');
+    document.getElementById('buyNowProductName').textContent = productName;
+    document.getElementById('buyNowProductPrice').textContent = '₹' + price;
     
-    // Simulate processing delay for better UX
+    buyNowProducts = [{ name: productName, price: price }];
+    renderSuggestedProducts(productName);
+    updateBuyNowTotal();
+    
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
+}
+
+function closeBuyNowModal() {
+    const modal = document.getElementById('buyNowModal');
+    modal.classList.remove('show');
     setTimeout(() => {
-        window.location.href = `pay.html?product=${encodeURIComponent(productName)}&price=${price}`;
-    }, 500);
+        modal.style.display = 'none';
+        buyNowProducts = [];
+    }, 300);
+}
+
+function proceedToPaymentFromBuyNow() {
+    const cartItems = buyNowProducts.map(p => `${p.name}:${p.price}`).join('|');
+    const total = buyNowProducts.reduce((sum, p) => sum + p.price, 0);
+    window.location.href = `pay.html?cartItems=${encodeURIComponent(cartItems)}&total=${total}`;
+}
+
+function renderSuggestedProducts(currentProduct) {
+    const allProducts = [
+        { name: 'All India Leads', price: 99, icon: 'fas fa-phone' },
+        { name: 'Salaried Employee Verified Leads', price: 49, icon: 'fas fa-user-tie' },
+        { name: 'Verified Employees Leads', price: 49, icon: 'fas fa-check-circle' },
+        { name: 'Pan India Database', price: 99, icon: 'fas fa-flag' },
+        { name: '1 Crore+ Bulk Leads', price: 99, icon: 'fas fa-chart-bar' },
+        { name: '10,000+ Reels & Ads for Instagram', price: 99, icon: 'fas fa-film' },
+        { name: '1 Million+ Reels & Videos', price: 99, icon: 'fas fa-video' },
+        { name: '1000+ Mobile Apps', price: 99, icon: 'fas fa-mobile-alt' },
+        { name: '1000+ Mobile Apps to Publish', price: 99, icon: 'fas fa-mobile-alt' }
+    ];
+    
+    const suggested = allProducts.filter(p => p.name !== currentProduct);
+    const container = document.getElementById('suggestedProducts');
+    
+    container.innerHTML = suggested.map(product => {
+        const isAdded = buyNowProducts.some(p => p.name === product.name);
+        return `
+            <div class="suggested-product-item ${isAdded ? 'added' : ''}">
+                <i class="${product.icon}"></i>
+                <div class="suggested-product-info">
+                    <h5>${product.name}</h5>
+                    <p>₹${product.price}</p>
+                </div>
+                <button 
+                    onclick="${isAdded ? `removeFromBuyNow('${product.name}')` : `addToBuyNow('${product.name}', ${product.price}, '${product.icon}')`}" 
+                    class="add-suggested-btn ${isAdded ? 'added' : ''}">
+                    ${isAdded ? '−' : '+'}
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
+function addToBuyNow(name, price, icon) {
+    if (!buyNowProducts.some(p => p.name === name)) {
+        buyNowProducts.push({ name, price, icon });
+        const currentProduct = document.getElementById('buyNowProductName').textContent;
+        renderSuggestedProducts(currentProduct);
+        updateBuyNowTotal();
+    }
+}
+
+function removeFromBuyNow(name) {
+    buyNowProducts = buyNowProducts.filter(p => p.name !== name);
+    const currentProduct = document.getElementById('buyNowProductName').textContent;
+    renderSuggestedProducts(currentProduct);
+    updateBuyNowTotal();
+}
+
+function updateBuyNowTotal() {
+    const total = buyNowProducts.reduce((sum, p) => sum + p.price, 0);
+    const priceElement = document.getElementById('buyNowProductPrice');
+    if (buyNowProducts.length > 1) {
+        priceElement.textContent = `Total: ₹${total}`;
+    } else {
+        priceElement.textContent = `₹${total}`;
+    }
 }
 
 let cart = [];
@@ -446,19 +528,7 @@ function storeCartToggle(action) {
 let currentProductInfo = {};
 
 function showProductInfo(name, price, icon, description) {
-    currentProductInfo = { name, price: parseInt(price.replace('₹', '')), icon, description };
-    
-    // Store product view in Firebase
-    storeProductView(name, price);
-    
-    document.getElementById('productInfoTitle').textContent = name;
-    document.getElementById('productInfoDescription').textContent = description;
-    document.getElementById('productInfoPrice').textContent = price;
-    document.getElementById('productInfoIcon').innerHTML = `<i class="${icon}"></i>`;
-    
-    const modal = document.getElementById('productInfoModal');
-    modal.style.display = 'flex';
-    setTimeout(() => modal.classList.add('show'), 10);
+    window.location.href = `product-detail.html?product=${encodeURIComponent(name)}`;
 }
 
 function closeProductInfo() {
