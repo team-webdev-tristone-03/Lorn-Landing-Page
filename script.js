@@ -5,6 +5,12 @@ function initCarousel() {
     const items = document.querySelectorAll('.carousel-item');
     const indicatorsContainer = document.getElementById('indicators');
     
+    // Check if indicators container exists
+    if (!indicatorsContainer) {
+        console.log('Indicators container not found - skipping carousel init');
+        return;
+    }
+    
     // Clear existing indicators
     indicatorsContainer.innerHTML = '';
     

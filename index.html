@@ -674,7 +674,7 @@
           </a>
         </div>
         <div class="footer-bottom">
-          <p>&copy; 2025 LORN VINGEST. All Rights Reserved.</p>
+          <p>&copy; <span id="currentYear"></span> LORN VINGEST. All Rights Reserved.</p>
         </div>
       </div>
     </footer>
@@ -703,6 +703,7 @@
     <!-- Main Script -->
     <script src="script.js"></script>
     <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
         window.addEventListener('load', () => {
             if (window.location.hash === '#buynow') {
                 const product = JSON.parse(sessionStorage.getItem('buyNowProduct') || '{}');
@@ -715,6 +716,10 @@
                 sessionStorage.removeItem('cartAdded');
                 if (typeof updateCartIcon === 'function') updateCartIcon();
                 if (typeof updateCartDisplay === 'function') updateCartDisplay();
+                // Show cart modal automatically
+                setTimeout(() => {
+                    if (typeof toggleCart === 'function') toggleCart();
+                }, 500);
             }
         });
     </script>

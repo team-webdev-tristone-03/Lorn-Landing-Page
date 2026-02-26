@@ -54,10 +54,10 @@
         </div>
         <div class="product-description">
             <h3>About This Product</h3>
-            <p>Verified database of salaried employees with complete contact information.</p>
-            <p>Ideal for financial services, insurance, and B2B marketing campaigns.</p>
-            <p>Access to professionals with stable income and purchasing power.</p>
-            <p>Increase your conversion rates with targeted marketing.</p>
+            <p>Verified database of salaried employees for targeted marketing.</p>
+            <p>Ideal for financial services, insurance, and B2B companies.</p>
+            <p>Access verified employment data for better conversion rates.</p>
+            <p>Target the right audience with accurate employee information.</p>
         </div>
         <div class="action-buttons">
             <button class="btn buy-btn" onclick="buyNow()">Buy Now</button>
@@ -68,7 +68,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="./firebaseConfig.js"></script>
     <script>
-        const PRODUCT = {name: 'Salaried Employee Verified Leads', price: 49, icon: 'fas fa-user-tie'};
+        const PRODUCT = {name: 'Salaried Employee Verified Leads', price: 99, icon: 'fas fa-user-tie'};
         let timeLeft = 900;
         setInterval(() => {
             timeLeft = timeLeft <= 0 ? 900 : timeLeft - 1;
@@ -82,6 +82,10 @@
         }
         
         function addToCart() {
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'Adding...';
+            
             if (typeof firebase !== 'undefined' && firebase.firestore) {
                 const db = firebase.firestore();
                 let sessionId = sessionStorage.getItem('sessionId');
@@ -103,15 +107,32 @@
                     }
                     return Promise.resolve();
                 }).then(() => {
-                    sessionStorage.setItem('cartAdded', 'true');
-                    window.location.href = 'index.html';
+                    button.textContent = '✓ Added to Cart';
+                    button.style.background = '#00ff88';
+                    button.style.color = '#000';
+                    setTimeout(() => {
+                        button.textContent = 'Add to Cart';
+                        button.style.background = 'transparent';
+                        button.style.color = '#00ffff';
+                        button.disabled = false;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Error:', err);
+                    button.textContent = 'Add to Cart';
+                    button.disabled = false;
                 });
             } else {
-                sessionStorage.setItem('cartAdded', 'true');
-                window.location.href = 'index.html';
+                button.textContent = '✓ Added to Cart';
+                button.style.background = '#00ff88';
+                button.style.color = '#000';
+                setTimeout(() => {
+                    button.textContent = 'Add to Cart';
+                    button.style.background = 'transparent';
+                    button.style.color = '#00ffff';
+                    button.disabled = false;
+                }, 2000);
             }
         }
     </script>
 </body>
 </html>
-

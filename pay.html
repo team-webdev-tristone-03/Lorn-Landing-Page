@@ -488,6 +488,10 @@
 
       // ===== FIREBASE DATABASE FUNCTIONS =====
       function storePaymentData(paymentDetails) {
+        if (typeof firebase === 'undefined' || !firebase.firestore) {
+          console.error('Firebase not loaded');
+          return;
+        }
         const db = firebase.firestore();
 
         db.collection("payments")
@@ -501,6 +505,10 @@
       }
 
       function storeCartItems(cartItems, total) {
+        if (typeof firebase === 'undefined' || !firebase.firestore) {
+          console.error('Firebase not loaded');
+          return;
+        }
         const db = firebase.firestore();
         
         const cartData = {
@@ -534,6 +542,10 @@
       }
 
       function storeEmailSignup(email) {
+        if (typeof firebase === 'undefined' || !firebase.firestore) {
+          console.error('Firebase not loaded');
+          return;
+        }
         const db = firebase.firestore();
 
         db.collection("email_signups")
@@ -582,11 +594,11 @@
           console.log('Cart Items:', cartItems);
           console.log('Total Price:', productPrice);
 
-          // Store cart items in Firebase
-          storeCartItems(cartItems, productPrice);
-
           // Update UI immediately
           updateProductDisplay();
+
+          // Store cart items in Firebase after delay
+          setTimeout(() => storeCartItems(cartItems, productPrice), 1000);
         }
         // Handle single product
         else if (name && price) {
@@ -594,11 +606,11 @@
           productPrice = parseInt(price);
           cartItems = [{ name: productName, price: productPrice }];
 
-          // Store single product as cart item
-          storeCartItems(cartItems, productPrice);
-
           // Update UI immediately
           updateProductDisplay();
+
+          // Store single product as cart item after delay
+          setTimeout(() => storeCartItems(cartItems, productPrice), 1000);
         } else {
           // Default product if no params
           productName = "Select a product";
@@ -623,14 +635,13 @@
       }
 
       // Load product details on page load
-      document.addEventListener('DOMContentLoaded', function() {
+      window.addEventListener('load', function() {
         console.log('Page loaded, getting product details...');
         getProductDetailsFromURL();
       });
-      
-      // Also call immediately in case DOMContentLoaded already fired
-      getProductDetailsFromURL();
-
+    </script>
+  </body>
+</html>
       // ===== PDF GENERATION FUNCTION =====
       function generateInvoicePDF(paymentDetails) {
         const { jsPDF } = window.jspdf;
@@ -944,5 +955,6 @@
     
     <!-- Payment Script -->
     <script src="payment-script.js"></script>
-  </body>
-</html>
+
+    <script>
+      // ===== BACK BUTTON FUNCTIONALITY =====

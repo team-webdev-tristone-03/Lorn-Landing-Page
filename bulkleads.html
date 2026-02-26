@@ -54,10 +54,10 @@
         </div>
         <div class="product-description">
             <h3>About This Product</h3>
-            <p>Massive database of over 1 crore verified leads across multiple industries.</p>
-            <p>Perfect for large-scale marketing operations and enterprise solutions.</p>
-            <p>Unlimited potential for business growth and market penetration.</p>
-            <p>Cost-effective solution for high-volume marketing campaigns.</p>
+            <p>Massive collection of over 1 crore verified business leads.</p>
+            <p>Perfect for large-scale marketing and sales campaigns.</p>
+            <p>Access millions of potential customers instantly.</p>
+            <p>Supercharge your outreach with bulk lead generation.</p>
         </div>
         <div class="action-buttons">
             <button class="btn buy-btn" onclick="buyNow()">Buy Now</button>
@@ -82,6 +82,10 @@
         }
         
         function addToCart() {
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'Adding...';
+            
             if (typeof firebase !== 'undefined' && firebase.firestore) {
                 const db = firebase.firestore();
                 let sessionId = sessionStorage.getItem('sessionId');
@@ -103,15 +107,32 @@
                     }
                     return Promise.resolve();
                 }).then(() => {
-                    sessionStorage.setItem('cartAdded', 'true');
-                    window.location.href = 'index.html';
+                    button.textContent = '✓ Added to Cart';
+                    button.style.background = '#00ff88';
+                    button.style.color = '#000';
+                    setTimeout(() => {
+                        button.textContent = 'Add to Cart';
+                        button.style.background = 'transparent';
+                        button.style.color = '#00ffff';
+                        button.disabled = false;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Error:', err);
+                    button.textContent = 'Add to Cart';
+                    button.disabled = false;
                 });
             } else {
-                sessionStorage.setItem('cartAdded', 'true');
-                window.location.href = 'index.html';
+                button.textContent = '✓ Added to Cart';
+                button.style.background = '#00ff88';
+                button.style.color = '#000';
+                setTimeout(() => {
+                    button.textContent = 'Add to Cart';
+                    button.style.background = 'transparent';
+                    button.style.color = '#00ffff';
+                    button.disabled = false;
+                }, 2000);
             }
         }
     </script>
 </body>
 </html>
-

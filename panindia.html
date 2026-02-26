@@ -54,10 +54,10 @@
         </div>
         <div class="product-description">
             <h3>About This Product</h3>
-            <p>Complete pan-India database with state-wise categorized leads.</p>
-            <p>Ideal for nationwide marketing campaigns and business expansion.</p>
-            <p>Access to diverse customer segments across all regions.</p>
-            <p>Scale your business operations with comprehensive market data.</p>
+            <p>Massive pan-India database covering all major cities and towns.</p>
+            <p>Ideal for nationwide campaigns and market expansion.</p>
+            <p>Reach customers from Kashmir to Kanyakumari.</p>
+            <p>Scale your business with comprehensive geographic coverage.</p>
         </div>
         <div class="action-buttons">
             <button class="btn buy-btn" onclick="buyNow()">Buy Now</button>
@@ -82,6 +82,10 @@
         }
         
         function addToCart() {
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'Adding...';
+            
             if (typeof firebase !== 'undefined' && firebase.firestore) {
                 const db = firebase.firestore();
                 let sessionId = sessionStorage.getItem('sessionId');
@@ -103,15 +107,32 @@
                     }
                     return Promise.resolve();
                 }).then(() => {
-                    sessionStorage.setItem('cartAdded', 'true');
-                    window.location.href = 'index.html';
+                    button.textContent = '✓ Added to Cart';
+                    button.style.background = '#00ff88';
+                    button.style.color = '#000';
+                    setTimeout(() => {
+                        button.textContent = 'Add to Cart';
+                        button.style.background = 'transparent';
+                        button.style.color = '#00ffff';
+                        button.disabled = false;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Error:', err);
+                    button.textContent = 'Add to Cart';
+                    button.disabled = false;
                 });
             } else {
-                sessionStorage.setItem('cartAdded', 'true');
-                window.location.href = 'index.html';
+                button.textContent = '✓ Added to Cart';
+                button.style.background = '#00ff88';
+                button.style.color = '#000';
+                setTimeout(() => {
+                    button.textContent = 'Add to Cart';
+                    button.style.background = 'transparent';
+                    button.style.color = '#00ffff';
+                    button.disabled = false;
+                }, 2000);
             }
         }
     </script>
 </body>
 </html>
-
