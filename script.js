@@ -158,14 +158,35 @@ form.addEventListener('submit', function (e) {
         });
     }
     
-    popup.classList.add('show');
-    setTimeout(() => {
-        const subject = encodeURIComponent("New Vault Signup");
-        const body = encodeURIComponent("A new user joined the vault with email: " + userEmail);
-        window.location.href = `mailto:info@lornvingest.com?subject=${subject}&body=${body}`;
-        popup.classList.remove('show');
-        form.reset();
-    }, 1000);
+    // Send email via EmailJS
+    if (typeof emailjs !== 'undefined') {
+        emailjs.send('service_7epwwdf', 'template_602e5qj', {
+            to_email: 'lornvingest@gmail.com',
+            user_email: userEmail,
+            signup_date: new Date().toLocaleString('en-IN'),
+            message: `New user signed up for Digital Money Codex with email: ${userEmail}`
+        }).then(() => {
+            console.log('Email sent successfully via EmailJS');
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+                form.reset();
+            }, 2000);
+        }).catch((error) => {
+            console.error('EmailJS error:', error);
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+                form.reset();
+            }, 2000);
+        });
+    } else {
+        popup.classList.add('show');
+        setTimeout(() => {
+            popup.classList.remove('show');
+            form.reset();
+        }, 2000);
+    }
 });
 
 function toggleProductsSlider() {
