@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clean Firebase Collections</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: Arial;
+            padding: 40px;
+            text-align: center;
+        }
+        button {
+            padding: 20px 40px;
+            background: red;
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 10px;
+            margin: 20px;
+        }
+        #status {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Delete All Collections Except upi_payments</h1>
+    <button onclick="deleteOtherCollections()">DELETE OTHER COLLECTIONS</button>
+    <div id="status"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="./firebaseConfig.js"></script>
+    <script>
+        async function deleteOtherCollections() {
+            if (!confirm('Delete all collections except upi_payments?')) return;
+            
+            const db = firebase.firestore();
+            const collectionsToDelete = ['payments', 'carts', 'cart_purchases', 'email_signups', 'user_interactions'];
+            const status = document.getElementById('status');
+            
+            for (const collectionName of collectionsToDelete) {
+                status.innerHTML += `<p>Deleting ${collectionName}...</p>`;
+                
+                try {
+                    const snapshot = await db.collection(collectionName).get();
+                    
+                    for (const doc of snapshot.docs) {
+                        await doc.ref.delete();
+                    }
+                    
+                    status.innerHTML += `<p style="color: green;">✓ Deleted ${snapshot.size} documents from ${collectionName}</p>`;
+                } catch (error) {
+                    status.innerHTML += `<p style="color: orange;">⚠ ${collectionName} not found or already empty</p>`;
+                }
+            }
+            
+            status.innerHTML += '<h2 style="color: green;">DONE! Only upi_payments remains</h2>';
+        }
+    </script>
+</body>
+</html>
